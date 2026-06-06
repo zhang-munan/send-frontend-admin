@@ -6,7 +6,7 @@ const proxy = {
 	},
 
 	'/prod/': {
-		target: 'https://show.cool-admin.com',
+		target: 'http://124.222.204.121:8001',
 		changeOrigin: true,
 		rewrite: (path: string) => path.replace(/^\/prod/, '/api')
 	}

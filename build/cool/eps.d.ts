@@ -351,6 +351,93 @@ declare namespace Eps {
 		[key: string]: any;
 	}
 
+	interface ConversationInfoEntity {
+		/**
+		 * ID
+		 */
+		id?: number;
+
+		/**
+		 * 用户 ID
+		 */
+		userId?: BigInt;
+
+		/**
+		 * 收件人手机号哈希
+		 */
+		receiverPhoneHash?: string;
+
+		/**
+		 * 收件人脱敏号码
+		 */
+		receiverPhoneMask?: string;
+
+		/**
+		 * 最后一条消息摘要
+		 */
+		lastMsgContent?: string;
+
+		/**
+		 * 最后消息时间
+		 */
+		lastMsgTime?: Date;
+
+		/**
+		 * 最后一条是否为回复
+		 */
+		lastMsgIsReply?: number;
+
+		/**
+		 * 未读回复数
+		 */
+		unreadCount?: number;
+
+		/**
+		 * 消息总数
+		 */
+		msgCount?: number;
+
+		/**
+		 * 收件人是否已退订
+		 */
+		isReceiverUnsubscribed?: number;
+
+		/**
+		 * 是否标记重要
+		 */
+		isMarked?: number;
+
+		/**
+		 * 标记类型 important/processed/ended
+		 */
+		markType?: string;
+
+		/**
+		 * 状态
+		 */
+		status?: number;
+
+		/**
+		 * 创建时间
+		 */
+		createTime?: string;
+
+		/**
+		 * 更新时间
+		 */
+		updateTime?: string;
+
+		/**
+		 * 昵称
+		 */
+		userName?: string;
+
+		/**
+		 * 任意键值
+		 */
+		[key: string]: any;
+	}
+
 	interface DemoGoodsEntity {
 		/**
 		 * ID
@@ -495,6 +582,158 @@ declare namespace Eps {
 		 * 更新时间
 		 */
 		updateTime?: string;
+
+		/**
+		 * 任意键值
+		 */
+		[key: string]: any;
+	}
+
+	interface MessageInfoEntity {
+		/**
+		 * ID
+		 */
+		id?: number;
+
+		/**
+		 * 发送用户ID
+		 */
+		userId?: BigInt;
+
+		/**
+		 * 使用的模板ID
+		 */
+		templateId?: BigInt;
+
+		/**
+		 * 所属对话ID
+		 */
+		conversationId?: BigInt;
+
+		/**
+		 * 收件人手机号（后续加密）
+		 */
+		receiverPhone?: string;
+
+		/**
+		 * 收件人脱敏号码
+		 */
+		receiverPhoneMask?: string;
+
+		/**
+		 * 收件人手机号哈希
+		 */
+		receiverPhoneHash?: string;
+
+		/**
+		 * 消息内容
+		 */
+		content?: string;
+
+		/**
+		 * 消息字数
+		 */
+		contentLength?: smallint;
+
+		/**
+		 * 计费条数
+		 */
+		smsCount?: number;
+
+		/**
+		 * 是否匿名 0实名 1匿名
+		 */
+		isAnonymous?: number;
+
+		/**
+		 * 发送者签名
+		 */
+		senderSignature?: string;
+
+		/**
+		 * 1立即发送 2定时发送
+		 */
+		sendType?: number;
+
+		/**
+		 * 定时发送时间
+		 */
+		scheduledAt?: Date;
+
+		/**
+		 * 0待审核 1审核通过 2审核拒绝 3待发送 4发送中 5已送达 6发送失败 7已取消
+		 */
+		status?: number;
+
+		/**
+		 * 0待审核 1通过 2拒绝 3转人工
+		 */
+		auditStatus?: number;
+
+		/**
+		 * 审核备注
+		 */
+		auditRemark?: string;
+
+		/**
+		 * 审核时间
+		 */
+		auditedAt?: Date;
+
+		/**
+		 * 短信平台消息ID
+		 */
+		smsMsgId?: string;
+
+		/**
+		 * 短信通道标识
+		 */
+		smsChannel?: string;
+
+		/**
+		 * 送达时间
+		 */
+		deliveredAt?: Date;
+
+		/**
+		 * 失败原因
+		 */
+		failReason?: string;
+
+		/**
+		 * 重试次数
+		 */
+		retryCount?: number;
+
+		/**
+		 * 扣费金额
+		 */
+		feeAmount?: number;
+
+		/**
+		 * 是否免费重发
+		 */
+		isFreeRetry?: number;
+
+		/**
+		 * 发送端IP
+		 */
+		clientIp?: string;
+
+		/**
+		 * 创建时间
+		 */
+		createTime?: string;
+
+		/**
+		 * 更新时间
+		 */
+		updateTime?: string;
+
+		/**
+		 * 昵称
+		 */
+		senderNickName?: string;
 
 		/**
 		 * 任意键值
@@ -847,6 +1086,98 @@ declare namespace Eps {
 		[key: string]: any;
 	}
 
+	interface TemplateInfoEntity {
+		/**
+		 * ID
+		 */
+		id?: number;
+
+		/**
+		 * 模板标题
+		 */
+		title?: string;
+
+		/**
+		 * 模板内容
+		 */
+		content?: string;
+
+		/**
+		 * 分类
+		 */
+		category?: string;
+
+		/**
+		 * 标签(JSON数组)
+		 */
+		tags?: any;
+
+		/**
+		 * 使用建议
+		 */
+		usageTip?: string;
+
+		/**
+		 * 使用人数
+		 */
+		useCount?: number;
+
+		/**
+		 * 收藏人数
+		 */
+		collectCount?: number;
+
+		/**
+		 * 是否匿名模板
+		 */
+		isAnonymous?: number;
+
+		/**
+		 * 排序权重
+		 */
+		sortOrder?: number;
+
+		/**
+		 * 是否推荐
+		 */
+		isRecommended?: number;
+
+		/**
+		 * 是否启用
+		 */
+		isActive?: number;
+
+		/**
+		 * 来源
+		 */
+		source?: number;
+
+		/**
+		 * 创建者
+		 */
+		creatorId?: BigInt;
+
+		/**
+		 * 审核状态
+		 */
+		auditStatus?: number;
+
+		/**
+		 * 创建时间
+		 */
+		createTime?: string;
+
+		/**
+		 * 更新时间
+		 */
+		updateTime?: string;
+
+		/**
+		 * 任意键值
+		 */
+		[key: string]: any;
+	}
+
 	interface UserAddressEntity {
 		/**
 		 * ID
@@ -961,26 +1292,6 @@ declare namespace Eps {
 		description?: string;
 
 		/**
-		 * 生日
-		 */
-		birthday?: string;
-
-		/**
-		 * 省
-		 */
-		province?: string;
-
-		/**
-		 * 市
-		 */
-		city?: string;
-
-		/**
-		 * 区
-		 */
-		district?: string;
-
-		/**
 		 * 创建时间
 		 */
 		createTime?: string;
@@ -1036,6 +1347,11 @@ declare namespace Eps {
 		list: BaseSysUserEntity[];
 	}
 
+	interface ConversationInfoPageResponse {
+		pagination: PagePagination;
+		list: ConversationInfoEntity[];
+	}
+
 	interface DemoGoodsPageResponse {
 		pagination: PagePagination;
 		list: DemoGoodsEntity[];
@@ -1049,6 +1365,11 @@ declare namespace Eps {
 	interface DictTypePageResponse {
 		pagination: PagePagination;
 		list: DictTypeEntity[];
+	}
+
+	interface MessageInfoPageResponse {
+		pagination: PagePagination;
+		list: MessageInfoEntity[];
 	}
 
 	interface PluginInfoPageResponse {
@@ -1074,6 +1395,11 @@ declare namespace Eps {
 	interface TaskInfoPageResponse {
 		pagination: PagePagination;
 		list: TaskInfoEntity[];
+	}
+
+	interface TemplateInfoPageResponse {
+		pagination: PagePagination;
+		list: TemplateInfoEntity[];
 	}
 
 	interface UserAddressPageResponse {
@@ -1572,6 +1898,64 @@ declare namespace Eps {
 		request: Request;
 	}
 
+	interface ConversationInfo {
+		/**
+		 * 删除
+		 */
+		delete(data?: any): Promise<any>;
+
+		/**
+		 * 修改
+		 */
+		update(data?: any): Promise<any>;
+
+		/**
+		 * 单个信息
+		 */
+		info(data?: any): Promise<ConversationInfoEntity>;
+
+		/**
+		 * 列表查询
+		 */
+		list(data?: any): Promise<ConversationInfoEntity[]>;
+
+		/**
+		 * 分页查询
+		 */
+		page(data?: any): Promise<ConversationInfoPageResponse>;
+
+		/**
+		 * 新增
+		 */
+		add(data?: any): Promise<any>;
+
+		/**
+		 * 权限标识
+		 */
+		permission: {
+			delete: string;
+			update: string;
+			info: string;
+			list: string;
+			page: string;
+			add: string;
+		};
+
+		/**
+		 * 权限状态
+		 */
+		_permission: {
+			delete: boolean;
+			update: boolean;
+			info: boolean;
+			list: boolean;
+			page: boolean;
+			add: boolean;
+		};
+
+		request: Request;
+	}
+
 	interface DemoGoods {
 		/**
 		 * 删除
@@ -1780,6 +2164,71 @@ declare namespace Eps {
 		_permission: {
 			delete: boolean;
 			update: boolean;
+			info: boolean;
+			list: boolean;
+			page: boolean;
+			add: boolean;
+		};
+
+		request: Request;
+	}
+
+	interface MessageInfo {
+		/**
+		 * 删除
+		 */
+		delete(data?: any): Promise<any>;
+
+		/**
+		 * 修改
+		 */
+		update(data?: any): Promise<any>;
+
+		/**
+		 * 审核消息
+		 */
+		audit(data?: any): Promise<any>;
+
+		/**
+		 * 单个信息
+		 */
+		info(data?: any): Promise<MessageInfoEntity>;
+
+		/**
+		 * 列表查询
+		 */
+		list(data?: any): Promise<MessageInfoEntity[]>;
+
+		/**
+		 * 分页查询
+		 */
+		page(data?: any): Promise<MessageInfoPageResponse>;
+
+		/**
+		 * 新增
+		 */
+		add(data?: any): Promise<any>;
+
+		/**
+		 * 权限标识
+		 */
+		permission: {
+			delete: string;
+			update: string;
+			audit: string;
+			info: string;
+			list: string;
+			page: string;
+			add: string;
+		};
+
+		/**
+		 * 权限状态
+		 */
+		_permission: {
+			delete: boolean;
+			update: boolean;
+			audit: boolean;
 			info: boolean;
 			list: boolean;
 			page: boolean;
@@ -2078,6 +2527,71 @@ declare namespace Eps {
 		request: Request;
 	}
 
+	interface TemplateInfo {
+		/**
+		 * 删除
+		 */
+		delete(data?: any): Promise<any>;
+
+		/**
+		 * 修改
+		 */
+		update(data?: any): Promise<any>;
+
+		/**
+		 * 审核模板
+		 */
+		audit(data?: any): Promise<any>;
+
+		/**
+		 * 单个信息
+		 */
+		info(data?: any): Promise<TemplateInfoEntity>;
+
+		/**
+		 * 列表查询
+		 */
+		list(data?: any): Promise<TemplateInfoEntity[]>;
+
+		/**
+		 * 分页查询
+		 */
+		page(data?: any): Promise<TemplateInfoPageResponse>;
+
+		/**
+		 * 新增
+		 */
+		add(data?: any): Promise<any>;
+
+		/**
+		 * 权限标识
+		 */
+		permission: {
+			delete: string;
+			update: string;
+			audit: string;
+			info: string;
+			list: string;
+			page: string;
+			add: string;
+		};
+
+		/**
+		 * 权限状态
+		 */
+		_permission: {
+			delete: boolean;
+			update: boolean;
+			audit: boolean;
+			info: boolean;
+			list: boolean;
+			page: boolean;
+			add: boolean;
+		};
+
+		request: Request;
+	}
+
 	interface UserAddress {
 		/**
 		 * 删除
@@ -2224,12 +2738,15 @@ declare namespace Eps {
 				user: BaseSysUser;
 			};
 		};
+		conversation: { info: ConversationInfo };
 		demo: { goods: DemoGoods; tenant: DemoTenant };
 		dict: { info: DictInfo; type: DictType };
+		message: { info: MessageInfo };
 		plugin: { info: PluginInfo };
 		recycle: { data: RecycleData };
 		space: { info: SpaceInfo; type: SpaceType };
 		task: { info: TaskInfo };
+		template: { info: TemplateInfo };
 		user: { address: UserAddress; info: UserInfo };
 	};
 }
