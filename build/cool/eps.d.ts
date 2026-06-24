@@ -589,6 +589,68 @@ declare namespace Eps {
 		[key: string]: any;
 	}
 
+	interface FeedbackInfoEntity {
+		/**
+		 * ID
+		 */
+		id?: number;
+
+		/**
+		 * 用户ID
+		 */
+		userId?: number;
+
+		/**
+		 * 反馈类型
+		 */
+		type?: number;
+
+		/**
+		 * 反馈内容
+		 */
+		content?: string;
+
+		/**
+		 * 截图
+		 */
+		images?: any;
+
+		/**
+		 * 联系方式
+		 */
+		contact?: string;
+
+		/**
+		 * 状态
+		 */
+		status?: number;
+
+		/**
+		 * 管理员回复
+		 */
+		reply?: string;
+
+		/**
+		 * 回复时间
+		 */
+		replyTime?: string;
+
+		/**
+		 * 创建时间
+		 */
+		createTime?: string;
+
+		/**
+		 * 更新时间
+		 */
+		updateTime?: string;
+
+		/**
+		 * 任意键值
+		 */
+		[key: string]: any;
+	}
+
 	interface MessageInfoEntity {
 		/**
 		 * ID
@@ -741,6 +803,257 @@ declare namespace Eps {
 		[key: string]: any;
 	}
 
+	interface UserBalanceEntity {
+		/**
+		 * ID
+		 */
+		id?: number;
+
+		/**
+		 * 用户ID
+		 */
+		userId?: BigInt;
+
+		/**
+		 * 当前余额
+		 */
+		balance?: number;
+
+		/**
+		 * 剩余消息条数
+		 */
+		messageQuota?: number;
+
+		/**
+		 * 累计充值
+		 */
+		totalRecharge?: number;
+
+		/**
+		 * 累计消费
+		 */
+		totalConsumed?: number;
+
+		/**
+		 * 创建时间
+		 */
+		createTime?: string;
+
+		/**
+		 * 更新时间
+		 */
+		updateTime?: string;
+
+		/**
+		 * 昵称
+		 */
+		userNickName?: string;
+
+		/**
+		 * 手机号
+		 */
+		userPhone?: string;
+
+		/**
+		 * 头像
+		 */
+		userAvatar?: string;
+
+		/**
+		 * 任意键值
+		 */
+		[key: string]: any;
+	}
+
+	interface OrderInfoEntity {
+		/**
+		 * ID
+		 */
+		id?: number;
+
+		/**
+		 * 用户ID
+		 */
+		userId?: BigInt;
+
+		/**
+		 * 订单编号
+		 */
+		orderNo?: string;
+
+		/**
+		 * 商品ID
+		 */
+		productId?: BigInt;
+
+		/**
+		 * 商品名称
+		 */
+		productName?: string;
+
+		/**
+		 * 数量
+		 */
+		quantity?: number;
+
+		/**
+		 * 商品原价
+		 */
+		originalPrice?: number;
+
+		/**
+		 * 优惠金额
+		 */
+		discountAmount?: number;
+
+		/**
+		 * 实付金额
+		 */
+		payAmount?: number;
+
+		/**
+		 * 支付方式：1微信 2支付宝 3余额
+		 */
+		payMethod?: number;
+
+		/**
+		 * 0待支付 1已支付 2已退款 3已关闭
+		 */
+		status?: number;
+
+		/**
+		 * 支付时间
+		 */
+		payTime?: Date;
+
+		/**
+		 * 第三方支付流水号
+		 */
+		tradeNo?: string;
+
+		/**
+		 * 支付参数JSON（如消息内容等附加参数）
+		 */
+		payParams?: string;
+
+		/**
+		 * 退款金额
+		 */
+		refundAmount?: number;
+
+		/**
+		 * 退款时间
+		 */
+		refundTime?: Date;
+
+		/**
+		 * 退款原因
+		 */
+		refundReason?: string;
+
+		/**
+		 * 客户端IP
+		 */
+		clientIp?: string;
+
+		/**
+		 * 备注
+		 */
+		remark?: string;
+
+		/**
+		 * 创建时间
+		 */
+		createTime?: string;
+
+		/**
+		 * 更新时间
+		 */
+		updateTime?: string;
+
+		/**
+		 * 昵称
+		 */
+		userNickName?: string;
+
+		/**
+		 * 手机号
+		 */
+		userPhone?: string;
+
+		/**
+		 * 任意键值
+		 */
+		[key: string]: any;
+	}
+
+	interface ProductInfoEntity {
+		/**
+		 * ID
+		 */
+		id?: number;
+
+		/**
+		 * 套餐名称
+		 */
+		name?: string;
+
+		/**
+		 * 副标题/宣传语
+		 */
+		subtitle?: string;
+
+		/**
+		 * 套餐描述
+		 */
+		description?: string;
+
+		/**
+		 * 原价
+		 */
+		originalPrice?: number;
+
+		/**
+		 * 售价
+		 */
+		sellPrice?: number;
+
+		/**
+		 * 包含消息条数
+		 */
+		messageQuota?: number;
+
+		/**
+		 * 0下架 1上架
+		 */
+		status?: number;
+
+		/**
+		 * 排序
+		 */
+		sortOrder?: number;
+
+		/**
+		 * 封面图URL
+		 */
+		coverImage?: string;
+
+		/**
+		 * 创建时间
+		 */
+		createTime?: string;
+
+		/**
+		 * 更新时间
+		 */
+		updateTime?: string;
+
+		/**
+		 * 任意键值
+		 */
+		[key: string]: any;
+	}
+
 	interface PluginInfoEntity {
 		/**
 		 * ID
@@ -878,6 +1191,229 @@ declare namespace Eps {
 		 * 姓名
 		 */
 		userName?: string;
+
+		/**
+		 * 任意键值
+		 */
+		[key: string]: any;
+	}
+
+	interface SettingDocEntity {
+		/**
+		 * ID
+		 */
+		id?: number;
+
+		/**
+		 * 文档标识：user_agreement | privacy_policy | usage_guide
+		 */
+		docKey?: string;
+
+		/**
+		 * 文档标题
+		 */
+		title?: string;
+
+		/**
+		 * 文档内容（富文本HTML）
+		 */
+		content?: longtext;
+
+		/**
+		 * 状态 0-禁用 1-启用
+		 */
+		status?: number;
+
+		/**
+		 * 创建时间
+		 */
+		createTime?: string;
+
+		/**
+		 * 更新时间
+		 */
+		updateTime?: string;
+
+		/**
+		 * 任意键值
+		 */
+		[key: string]: any;
+	}
+
+	interface SettingNotifyTemplateEntity {
+		/**
+		 * ID
+		 */
+		id?: number;
+
+		/**
+		 * 业务场景标识：send_result | reply | activity
+		 */
+		sceneKey?: string;
+
+		/**
+		 * 场景名称
+		 */
+		sceneName?: string;
+
+		/**
+		 * 平台：miniprogram | official
+		 */
+		platform?: string;
+
+		/**
+		 * 模板ID
+		 */
+		templateId?: string;
+
+		/**
+		 * 模板标题
+		 */
+		templateTitle?: string;
+
+		/**
+		 * 模板字段映射（JSON）
+		 */
+		fieldMapping?: string;
+
+		/**
+		 * 是否启用 0-禁用 1-启用
+		 */
+		enabled?: number;
+
+		/**
+		 * 备注
+		 */
+		remark?: string;
+
+		/**
+		 * 创建时间
+		 */
+		createTime?: string;
+
+		/**
+		 * 更新时间
+		 */
+		updateTime?: string;
+
+		/**
+		 * 任意键值
+		 */
+		[key: string]: any;
+	}
+
+	interface SettingSmsConfigEntity {
+		/**
+		 * ID
+		 */
+		id?: number;
+
+		/**
+		 * 通道名称：aliyun | tencent | other
+		 */
+		channelName?: string;
+
+		/**
+		 * 短信签名
+		 */
+		signName?: string;
+
+		/**
+		 * 短信模板编码
+		 */
+		templateCode?: string;
+
+		/**
+		 * AccessKey（加密存储）
+		 */
+		accessKey?: string;
+
+		/**
+		 * AccessSecret（加密存储）
+		 */
+		accessSecret?: string;
+
+		/**
+		 * API 端点
+		 */
+		endpoint?: string;
+
+		/**
+		 * 是否主通道 0-备用 1-主通道
+		 */
+		isPrimary?: number;
+
+		/**
+		 * 是否启用 0-禁用 1-启用
+		 */
+		isActive?: number;
+
+		/**
+		 * 日发送上限
+		 */
+		dailyLimit?: number;
+
+		/**
+		 * 通道余额
+		 */
+		balance?: number;
+
+		/**
+		 * 创建时间
+		 */
+		createTime?: string;
+
+		/**
+		 * 更新时间
+		 */
+		updateTime?: string;
+
+		/**
+		 * 任意键值
+		 */
+		[key: string]: any;
+	}
+
+	interface SettingUserEntity {
+		/**
+		 * ID
+		 */
+		id?: number;
+
+		/**
+		 * 用户ID
+		 */
+		userId?: BigInt;
+
+		/**
+		 * 发送结果通知
+		 */
+		notifySendResult?: number;
+
+		/**
+		 * 回复通知
+		 */
+		notifyReply?: number;
+
+		/**
+		 * 活动推送通知
+		 */
+		notifyActivity?: number;
+
+		/**
+		 * 匿名发送默认开启
+		 */
+		defaultAnonymous?: number;
+
+		/**
+		 * 创建时间
+		 */
+		createTime?: string;
+
+		/**
+		 * 更新时间
+		 */
+		updateTime?: string;
 
 		/**
 		 * 任意键值
@@ -1069,6 +1605,53 @@ declare namespace Eps {
 		 * undefined
 		 */
 		lockExpireTime?: Date;
+
+		/**
+		 * 创建时间
+		 */
+		createTime?: string;
+
+		/**
+		 * 更新时间
+		 */
+		updateTime?: string;
+
+		/**
+		 * 任意键值
+		 */
+		[key: string]: any;
+	}
+
+	interface TemplateCategoryEntity {
+		/**
+		 * ID
+		 */
+		id?: number;
+
+		/**
+		 * 分类名称
+		 */
+		name?: string;
+
+		/**
+		 * 分类标识(英文key)
+		 */
+		value?: string;
+
+		/**
+		 * 分类描述
+		 */
+		description?: string;
+
+		/**
+		 * 排序权重(越大越靠前)
+		 */
+		sortOrder?: number;
+
+		/**
+		 * 是否启用
+		 */
+		isActive?: number;
 
 		/**
 		 * 创建时间
@@ -1367,9 +1950,29 @@ declare namespace Eps {
 		list: DictTypeEntity[];
 	}
 
+	interface FeedbackInfoPageResponse {
+		pagination: PagePagination;
+		list: FeedbackInfoEntity[];
+	}
+
 	interface MessageInfoPageResponse {
 		pagination: PagePagination;
 		list: MessageInfoEntity[];
+	}
+
+	interface OrderBalancePageResponse {
+		pagination: PagePagination;
+		list: UserBalanceEntity[];
+	}
+
+	interface OrderInfoPageResponse {
+		pagination: PagePagination;
+		list: OrderInfoEntity[];
+	}
+
+	interface OrderProductPageResponse {
+		pagination: PagePagination;
+		list: ProductInfoEntity[];
 	}
 
 	interface PluginInfoPageResponse {
@@ -1380,6 +1983,26 @@ declare namespace Eps {
 	interface RecycleDataPageResponse {
 		pagination: PagePagination;
 		list: RecycleDataEntity[];
+	}
+
+	interface SettingDocPageResponse {
+		pagination: PagePagination;
+		list: SettingDocEntity[];
+	}
+
+	interface SettingNotifyTemplatePageResponse {
+		pagination: PagePagination;
+		list: SettingNotifyTemplateEntity[];
+	}
+
+	interface SettingSmsConfigPageResponse {
+		pagination: PagePagination;
+		list: SettingSmsConfigEntity[];
+	}
+
+	interface SettingUserSettingPageResponse {
+		pagination: PagePagination;
+		list: SettingUserEntity[];
 	}
 
 	interface SpaceInfoPageResponse {
@@ -1395,6 +2018,11 @@ declare namespace Eps {
 	interface TaskInfoPageResponse {
 		pagination: PagePagination;
 		list: TaskInfoEntity[];
+	}
+
+	interface TemplateCategoryPageResponse {
+		pagination: PagePagination;
+		list: TemplateCategoryEntity[];
 	}
 
 	interface TemplateInfoPageResponse {
@@ -2173,6 +2801,64 @@ declare namespace Eps {
 		request: Request;
 	}
 
+	interface FeedbackInfo {
+		/**
+		 * 更新状态
+		 */
+		updateStatus(data?: any): Promise<any>;
+
+		/**
+		 * 删除
+		 */
+		delete(data?: any): Promise<any>;
+
+		/**
+		 * 回复反馈
+		 */
+		reply(data?: any): Promise<any>;
+
+		/**
+		 * 单个信息
+		 */
+		info(data?: any): Promise<FeedbackInfoEntity>;
+
+		/**
+		 * 列表查询
+		 */
+		list(data?: any): Promise<FeedbackInfoEntity[]>;
+
+		/**
+		 * 分页查询
+		 */
+		page(data?: any): Promise<FeedbackInfoPageResponse>;
+
+		/**
+		 * 权限标识
+		 */
+		permission: {
+			updateStatus: string;
+			delete: string;
+			reply: string;
+			info: string;
+			list: string;
+			page: string;
+		};
+
+		/**
+		 * 权限状态
+		 */
+		_permission: {
+			updateStatus: boolean;
+			delete: boolean;
+			reply: boolean;
+			info: boolean;
+			list: boolean;
+			page: boolean;
+		};
+
+		request: Request;
+	}
+
 	interface MessageInfo {
 		/**
 		 * 删除
@@ -2229,6 +2915,143 @@ declare namespace Eps {
 			delete: boolean;
 			update: boolean;
 			audit: boolean;
+			info: boolean;
+			list: boolean;
+			page: boolean;
+			add: boolean;
+		};
+
+		request: Request;
+	}
+
+	interface OrderBalance {
+		/**
+		 * 调整消息配额
+		 */
+		adjustQuota(data?: any): Promise<any>;
+
+		/**
+		 * 单个信息
+		 */
+		info(data?: any): Promise<UserBalanceEntity>;
+
+		/**
+		 * 列表查询
+		 */
+		list(data?: any): Promise<UserBalanceEntity[]>;
+
+		/**
+		 * 分页查询
+		 */
+		page(data?: any): Promise<OrderBalancePageResponse>;
+
+		/**
+		 * 权限标识
+		 */
+		permission: { adjustQuota: string; info: string; list: string; page: string };
+
+		/**
+		 * 权限状态
+		 */
+		_permission: { adjustQuota: boolean; info: boolean; list: boolean; page: boolean };
+
+		request: Request;
+	}
+
+	interface OrderInfo {
+		/**
+		 * 删除
+		 */
+		delete(data?: any): Promise<any>;
+
+		/**
+		 * 关闭订单
+		 */
+		close(data?: any): Promise<any>;
+
+		/**
+		 * 单个信息
+		 */
+		info(data?: any): Promise<OrderInfoEntity>;
+
+		/**
+		 * 列表查询
+		 */
+		list(data?: any): Promise<OrderInfoEntity[]>;
+
+		/**
+		 * 分页查询
+		 */
+		page(data?: any): Promise<OrderInfoPageResponse>;
+
+		/**
+		 * 权限标识
+		 */
+		permission: { delete: string; close: string; info: string; list: string; page: string };
+
+		/**
+		 * 权限状态
+		 */
+		_permission: {
+			delete: boolean;
+			close: boolean;
+			info: boolean;
+			list: boolean;
+			page: boolean;
+		};
+
+		request: Request;
+	}
+
+	interface OrderProduct {
+		/**
+		 * 删除
+		 */
+		delete(data?: any): Promise<any>;
+
+		/**
+		 * 修改
+		 */
+		update(data?: any): Promise<any>;
+
+		/**
+		 * 单个信息
+		 */
+		info(data?: any): Promise<ProductInfoEntity>;
+
+		/**
+		 * 列表查询
+		 */
+		list(data?: any): Promise<ProductInfoEntity[]>;
+
+		/**
+		 * 分页查询
+		 */
+		page(data?: any): Promise<OrderProductPageResponse>;
+
+		/**
+		 * 新增
+		 */
+		add(data?: any): Promise<any>;
+
+		/**
+		 * 权限标识
+		 */
+		permission: {
+			delete: string;
+			update: string;
+			info: string;
+			list: string;
+			page: string;
+			add: string;
+		};
+
+		/**
+		 * 权限状态
+		 */
+		_permission: {
+			delete: boolean;
+			update: boolean;
 			info: boolean;
 			list: boolean;
 			page: boolean;
@@ -2328,6 +3151,230 @@ declare namespace Eps {
 		 * 权限状态
 		 */
 		_permission: { restore: boolean; info: boolean; page: boolean };
+
+		request: Request;
+	}
+
+	interface SettingDoc {
+		/**
+		 * 删除
+		 */
+		delete(data?: any): Promise<any>;
+
+		/**
+		 * 修改
+		 */
+		update(data?: any): Promise<any>;
+
+		/**
+		 * 单个信息
+		 */
+		info(data?: any): Promise<SettingDocEntity>;
+
+		/**
+		 * 列表查询
+		 */
+		list(data?: any): Promise<SettingDocEntity[]>;
+
+		/**
+		 * 分页查询
+		 */
+		page(data?: any): Promise<SettingDocPageResponse>;
+
+		/**
+		 * 新增
+		 */
+		add(data?: any): Promise<any>;
+
+		/**
+		 * 权限标识
+		 */
+		permission: {
+			delete: string;
+			update: string;
+			info: string;
+			list: string;
+			page: string;
+			add: string;
+		};
+
+		/**
+		 * 权限状态
+		 */
+		_permission: {
+			delete: boolean;
+			update: boolean;
+			info: boolean;
+			list: boolean;
+			page: boolean;
+			add: boolean;
+		};
+
+		request: Request;
+	}
+
+	interface SettingNotifyTemplate {
+		/**
+		 * 删除
+		 */
+		delete(data?: any): Promise<any>;
+
+		/**
+		 * 修改
+		 */
+		update(data?: any): Promise<any>;
+
+		/**
+		 * 单个信息
+		 */
+		info(data?: any): Promise<SettingNotifyTemplateEntity>;
+
+		/**
+		 * 列表查询
+		 */
+		list(data?: any): Promise<SettingNotifyTemplateEntity[]>;
+
+		/**
+		 * 分页查询
+		 */
+		page(data?: any): Promise<SettingNotifyTemplatePageResponse>;
+
+		/**
+		 * 新增
+		 */
+		add(data?: any): Promise<any>;
+
+		/**
+		 * 权限标识
+		 */
+		permission: {
+			delete: string;
+			update: string;
+			info: string;
+			list: string;
+			page: string;
+			add: string;
+		};
+
+		/**
+		 * 权限状态
+		 */
+		_permission: {
+			delete: boolean;
+			update: boolean;
+			info: boolean;
+			list: boolean;
+			page: boolean;
+			add: boolean;
+		};
+
+		request: Request;
+	}
+
+	interface SettingSmsConfig {
+		/**
+		 * primaryChannel
+		 */
+		primaryChannel(data?: any): Promise<any>;
+
+		/**
+		 * toggleActive
+		 */
+		toggleActive(data?: any): Promise<any>;
+
+		/**
+		 * setPrimary
+		 */
+		setPrimary(data?: any): Promise<any>;
+
+		/**
+		 * 删除
+		 */
+		delete(data?: any): Promise<any>;
+
+		/**
+		 * 修改
+		 */
+		update(data?: any): Promise<any>;
+
+		/**
+		 * 单个信息
+		 */
+		info(data?: any): Promise<SettingSmsConfigEntity>;
+
+		/**
+		 * 列表查询
+		 */
+		list(data?: any): Promise<SettingSmsConfigEntity[]>;
+
+		/**
+		 * 分页查询
+		 */
+		page(data?: any): Promise<SettingSmsConfigPageResponse>;
+
+		/**
+		 * 新增
+		 */
+		add(data?: any): Promise<any>;
+
+		/**
+		 * 权限标识
+		 */
+		permission: {
+			primaryChannel: string;
+			toggleActive: string;
+			setPrimary: string;
+			delete: string;
+			update: string;
+			info: string;
+			list: string;
+			page: string;
+			add: string;
+		};
+
+		/**
+		 * 权限状态
+		 */
+		_permission: {
+			primaryChannel: boolean;
+			toggleActive: boolean;
+			setPrimary: boolean;
+			delete: boolean;
+			update: boolean;
+			info: boolean;
+			list: boolean;
+			page: boolean;
+			add: boolean;
+		};
+
+		request: Request;
+	}
+
+	interface SettingUserSetting {
+		/**
+		 * 单个信息
+		 */
+		info(data?: any): Promise<SettingUserEntity>;
+
+		/**
+		 * 列表查询
+		 */
+		list(data?: any): Promise<SettingUserEntity[]>;
+
+		/**
+		 * 分页查询
+		 */
+		page(data?: any): Promise<SettingUserSettingPageResponse>;
+
+		/**
+		 * 权限标识
+		 */
+		permission: { info: string; list: string; page: string };
+
+		/**
+		 * 权限状态
+		 */
+		_permission: { info: boolean; list: boolean; page: boolean };
 
 		request: Request;
 	}
@@ -2527,6 +3574,64 @@ declare namespace Eps {
 		request: Request;
 	}
 
+	interface TemplateCategory {
+		/**
+		 * 删除
+		 */
+		delete(data?: any): Promise<any>;
+
+		/**
+		 * 修改
+		 */
+		update(data?: any): Promise<any>;
+
+		/**
+		 * 单个信息
+		 */
+		info(data?: any): Promise<TemplateCategoryEntity>;
+
+		/**
+		 * 列表查询
+		 */
+		list(data?: any): Promise<TemplateCategoryEntity[]>;
+
+		/**
+		 * 分页查询
+		 */
+		page(data?: any): Promise<TemplateCategoryPageResponse>;
+
+		/**
+		 * 新增
+		 */
+		add(data?: any): Promise<any>;
+
+		/**
+		 * 权限标识
+		 */
+		permission: {
+			delete: string;
+			update: string;
+			info: string;
+			list: string;
+			page: string;
+			add: string;
+		};
+
+		/**
+		 * 权限状态
+		 */
+		_permission: {
+			delete: boolean;
+			update: boolean;
+			info: boolean;
+			list: boolean;
+			page: boolean;
+			add: boolean;
+		};
+
+		request: Request;
+	}
+
 	interface TemplateInfo {
 		/**
 		 * 删除
@@ -2720,7 +3825,7 @@ declare namespace Eps {
 
 	type Request = (options: RequestOptions) => Promise<any>;
 
-	type DictKey = "brand" | "occupation";
+	type DictKey = "brand" | "occupation" | "templateCategory";
 
 	type Service = {
 		request: Request;
@@ -2741,12 +3846,20 @@ declare namespace Eps {
 		conversation: { info: ConversationInfo };
 		demo: { goods: DemoGoods; tenant: DemoTenant };
 		dict: { info: DictInfo; type: DictType };
+		feedback: { info: FeedbackInfo };
 		message: { info: MessageInfo };
+		order: { balance: OrderBalance; info: OrderInfo; product: OrderProduct };
 		plugin: { info: PluginInfo };
 		recycle: { data: RecycleData };
+		setting: {
+			doc: SettingDoc;
+			notifyTemplate: SettingNotifyTemplate;
+			smsConfig: SettingSmsConfig;
+			userSetting: SettingUserSetting;
+		};
 		space: { info: SpaceInfo; type: SpaceType };
 		task: { info: TaskInfo };
-		template: { info: TemplateInfo };
+		template: { category: TemplateCategory; info: TemplateInfo };
 		user: { address: UserAddress; info: UserInfo };
 	};
 }
