@@ -97,7 +97,7 @@
 
 			<el-form label-width="90px">
 				<el-form-item label="审核结果" required>
-					<el-radio-group v-model="audit.form.status">
+					<el-radio-group v-model="audit.form.status as any">
 						<el-radio :label="1">
 							<el-tag type="success">通过</el-tag>
 						</el-radio>
