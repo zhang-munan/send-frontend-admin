@@ -48,6 +48,7 @@ const options = reactive({
 		{ label: t("微信"), value: 1 },
 		{ label: t("支付宝"), value: 2 },
 		{ label: t("余额"), value: 3 },
+		{ label: t("模拟支付"), value: 4 },
 	],
 	status: [
 		{ label: t("待支付"), value: 0 },
@@ -114,7 +115,7 @@ const Upsert = useUpsert({
 			required: true,
 		},
 		{
-			label: t("支付方式：1微信"),
+			label: t("支付方式"),
 			prop: "payMethod",
 			component: { name: "el-radio-group", options: options.payMethod },
 		},
@@ -197,7 +198,7 @@ const Table = useTable({
 		{ label: t("优惠金额"), prop: "discountAmount", minWidth: 120 },
 		{ label: t("实付金额"), prop: "payAmount", minWidth: 120 },
 		{
-			label: t("支付方式：1微信"),
+			label: t("支付方式"),
 			prop: "payMethod",
 			minWidth: 120,
 			dict: options.payMethod,
