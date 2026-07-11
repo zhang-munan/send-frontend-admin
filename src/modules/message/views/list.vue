@@ -139,7 +139,7 @@ const { Table } = useTable({
 				{ label: '转人工', value: 3, type: 'warning' }
 			]
 		},
-		{ prop: 'feeAmount', label: '费用', width: 90 },
+		{ prop: 'feeAmount', label: '费用(分)', width: 90 },
 		{ prop: 'createTime', label: '创建时间', width: 170, sortable: true },
 		{ type: 'op', label: '操作', width: 120, fixed: 'right' }
 	]

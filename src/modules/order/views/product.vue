@@ -44,8 +44,8 @@ const { Table } = useTable({
 		{ prop: 'name', label: '套餐名称', minWidth: 120 },
 		{ prop: 'subtitle', label: '副标题', minWidth: 140, showOverflowTooltip: true },
 		{ prop: 'messageQuota', label: '消息条数', width: 100, align: 'center' },
-		{ prop: 'originalPrice', label: '原价(元)', width: 100, align: 'right' },
-		{ prop: 'sellPrice', label: '售价(元)', width: 100, align: 'right' },
+		{ prop: 'originalPrice', label: '原价(分)', width: 100, align: 'right' },
+		{ prop: 'sellPrice', label: '售价(分)', width: 100, align: 'right' },
 		{
 			prop: 'status',
 			label: '状态',
@@ -94,17 +94,17 @@ const { Upsert } = useUpsert({
 		},
 		{
 			prop: 'originalPrice',
-			label: '原价(元)',
+			label: '原价(分)',
 			required: true,
 			span: 12,
-			component: { name: 'el-input-number', props: { min: 0, precision: 2, step: 0.1 } }
+			component: { name: 'el-input-number', props: { min: 0, precision: 0, step: 1 } }
 		},
 		{
 			prop: 'sellPrice',
-			label: '售价(元)',
+			label: '售价(分)',
 			required: true,
 			span: 12,
-			component: { name: 'el-input-number', props: { min: 0, precision: 2, step: 0.1 } }
+			component: { name: 'el-input-number', props: { min: 0, precision: 0, step: 1 } }
 		},
 		{
 			prop: 'sortOrder',
