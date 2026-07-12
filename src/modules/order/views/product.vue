@@ -32,7 +32,7 @@ useCrud({ service: service.order.product }, app => {
 	app.refresh();
 });
 
-const { Table } = useTable({
+const Table = useTable({
 	columns: [
 		{ type: 'selection' },
 		{ prop: 'id', label: 'ID', width: 80 },
@@ -69,7 +69,7 @@ const { Table } = useTable({
 	]
 });
 
-const { Upsert } = useUpsert({
+const Upsert = useUpsert({
 	items: [
 		{
 			prop: 'name',
@@ -161,7 +161,7 @@ const { Upsert } = useUpsert({
 	}
 });
 
-const { Search } = useSearch({
+const Search = useSearch({
 	items: [
 		{
 			label: '状态',

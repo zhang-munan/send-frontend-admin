@@ -84,7 +84,7 @@ useCrud(
 );
 
 // cl-table
-const { Table } = useTable({
+const Table = useTable({
 	columns: [
 		{ type: 'selection' },
 		{ prop: 'id', label: 'ID', width: 80 },
@@ -147,7 +147,7 @@ const { Table } = useTable({
 });
 
 // cl-upsert
-const { Upsert } = useUpsert({
+const Upsert = useUpsert({
 	items: [
 		{
 			prop: 'receiverPhone',
@@ -202,7 +202,7 @@ const { Upsert } = useUpsert({
 });
 
 // cl-search
-const { Search } = useSearch({
+const Search = useSearch({
 	items: [
 		{
 			label: '状态',

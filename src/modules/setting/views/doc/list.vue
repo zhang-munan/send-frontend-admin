@@ -39,7 +39,7 @@ useCrud(
 	}
 );
 
-const { Table } = useTable({
+const Table = useTable({
 	columns: [
 		{ type: 'selection' },
 		{ prop: 'id', label: 'ID', width: 80 },
@@ -68,7 +68,7 @@ const { Table } = useTable({
 	]
 });
 
-const { Upsert } = useUpsert({
+const Upsert = useUpsert({
 	items: [
 		{
 			prop: 'docKey',
@@ -111,7 +111,7 @@ const { Upsert } = useUpsert({
 	]
 });
 
-const { Search } = useSearch({
+const Search = useSearch({
 	items: [
 		{
 			label: '状态',
