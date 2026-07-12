@@ -59,6 +59,7 @@ defineOptions({
 import { ElMessage, ElMessageBox } from "element-plus";
 import { useCrud, useTable, useUpsert, useSearch } from "@cool-vue/crud";
 import { useCool } from "/@/cool";
+import { centsToYuanFields, formatYuan, yuanToCentsFields } from "/$/order/utils/money";
 
 const { service } = useCool();
 
@@ -132,12 +133,12 @@ const Upsert = useUpsert({
 			},
 		},
 		{
-			label: "通道余额",
+			label: "通道余额(元)",
 			prop: "balance",
 			span: 12,
 			component: {
 				name: "el-input-number",
-				props: { min: 0, precision: 2, step: 100, style: "width: 100%", placeholder: "可选" },
+				props: { min: 0, precision: 2, step: 0.01, style: "width: 100%", placeholder: "可选" },
 			},
 		},
 		{
@@ -154,6 +155,12 @@ const Upsert = useUpsert({
 			},
 		},
 	],
+	onOpened(data) {
+		centsToYuanFields(data, ["balance"]);
+	},
+	onSubmit(data, { next }) {
+		next(yuanToCentsFields(data, ["balance"]));
+	},
 });
 
 // cl-table
@@ -176,10 +183,10 @@ const Table = useTable({
 		{ label: "启用状态", prop: "isActive", minWidth: 90 },
 		{ label: "日发送上限", prop: "dailyLimit", minWidth: 110 },
 		{
-			label: "余额",
+			label: "余额(元)",
 			prop: "balance",
 			minWidth: 100,
-			formatter: (row: any) => (row.balance != null ? `¥${row.balance}` : "-"),
+			formatter: (row: any) => (row.balance != null ? `¥${formatYuan(row.balance)}` : "-"),
 		},
 		{
 			label: "API 端点",

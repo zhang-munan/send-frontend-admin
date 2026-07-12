@@ -1009,6 +1009,16 @@ declare namespace Eps {
 		subtitle?: string;
 
 		/**
+		 * 套餐角标内容
+		 */
+		tagContent?: string;
+
+		/**
+		 * 套餐角标背景色
+		 */
+		tagBackgroundColor?: string;
+
+		/**
 		 * 套餐描述
 		 */
 		description?: string;

@@ -24,6 +24,7 @@
 <script lang="ts" setup name="order-product">
 import { useCool } from '/@/cool';
 import { useCrud, useTable, useUpsert, useSearch } from '@cool-vue/crud';
+import { centsToYuanFields, formatYuan, yuanToCentsFields } from '../utils/money';
 
 const { service } = useCool();
 
@@ -43,9 +44,10 @@ const { Table } = useTable({
 		},
 		{ prop: 'name', label: '套餐名称', minWidth: 120 },
 		{ prop: 'subtitle', label: '副标题', minWidth: 140, showOverflowTooltip: true },
+		{ prop: 'tagContent', label: '角标', width: 100, showOverflowTooltip: true },
 		{ prop: 'messageQuota', label: '消息条数', width: 100, align: 'center' },
-		{ prop: 'originalPrice', label: '原价(分)', width: 100, align: 'right' },
-		{ prop: 'sellPrice', label: '售价(分)', width: 100, align: 'right' },
+		{ prop: 'originalPrice', label: '原价(元)', width: 100, align: 'right', formatter: (row: any) => formatYuan(row.originalPrice) },
+		{ prop: 'sellPrice', label: '售价(元)', width: 100, align: 'right', formatter: (row: any) => formatYuan(row.sellPrice) },
 		{
 			prop: 'status',
 			label: '状态',
@@ -83,6 +85,18 @@ const { Upsert } = useUpsert({
 			component: { name: 'el-input', props: { placeholder: '例：最受欢迎', clearable: true } }
 		},
 		{
+			prop: 'tagContent',
+			label: '角标内容',
+			span: 12,
+			component: { name: 'el-input', props: { maxlength: 30, placeholder: '例：最受欢迎', clearable: true } }
+		},
+		{
+			prop: 'tagBackgroundColor',
+			label: '角标背景色',
+			span: 12,
+			component: { name: 'el-color-picker', props: { showAlpha: false, predefine: ['#fe8973', '#ff8c00', '#ff5f57'] } }
+		},
+		{
 			prop: 'messageQuota',
 			label: '消息条数',
 			required: true,
@@ -94,17 +108,17 @@ const { Upsert } = useUpsert({
 		},
 		{
 			prop: 'originalPrice',
-			label: '原价(分)',
+			label: '原价(元)',
 			required: true,
 			span: 12,
-			component: { name: 'el-input-number', props: { min: 0, precision: 0, step: 1 } }
+			component: { name: 'el-input-number', props: { min: 0, precision: 2, step: 0.01 } }
 		},
 		{
 			prop: 'sellPrice',
-			label: '售价(分)',
+			label: '售价(元)',
 			required: true,
 			span: 12,
-			component: { name: 'el-input-number', props: { min: 0, precision: 0, step: 1 } }
+			component: { name: 'el-input-number', props: { min: 0, precision: 2, step: 0.01 } }
 		},
 		{
 			prop: 'sortOrder',
@@ -138,7 +152,13 @@ const { Upsert } = useUpsert({
 			label: '套餐描述',
 			component: { name: 'el-input', props: { type: 'textarea', rows: 3, placeholder: '套餐详细描述（可选）' } }
 		}
-	]
+	],
+	onOpened(data) {
+		centsToYuanFields(data, ['originalPrice', 'sellPrice']);
+	},
+	onSubmit(data, { next }) {
+		next(yuanToCentsFields(data, ['originalPrice', 'sellPrice']));
+	}
 });
 
 const { Search } = useSearch({

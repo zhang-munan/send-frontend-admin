@@ -37,6 +37,7 @@ import { useCool } from "/@/cool";
 import { useI18n } from "vue-i18n";
 import { reactive } from "vue";
 import UserSelect from "/$/user/components/user-select.vue";
+import { centsToYuanFields, formatYuan, yuanToCentsFields } from "../utils/money";
 
 const { service } = useCool();
 const { t } = useI18n();
@@ -94,21 +95,21 @@ const Upsert = useUpsert({
 			required: true,
 		},
 		{
-			label: t("商品原价(分)"),
+			label: t("商品原价(元)"),
 			prop: "originalPrice",
 			component: { name: "el-input", props: { clearable: true } },
 			span: 12,
 			required: true,
 		},
 		{
-			label: t("优惠金额(分)"),
+			label: t("优惠金额(元)"),
 			prop: "discountAmount",
 			component: { name: "el-input", props: { clearable: true } },
 			span: 12,
 			required: true,
 		},
 		{
-			label: t("实付金额(分)"),
+			label: t("实付金额(元)"),
 			prop: "payAmount",
 			component: { name: "el-input", props: { clearable: true } },
 			span: 12,
@@ -148,7 +149,7 @@ const Upsert = useUpsert({
 			span: 12,
 		},
 		{
-			label: t("退款金额(分)"),
+			label: t("退款金额(元)"),
 			prop: "refundAmount",
 			component: { name: "el-input", props: { clearable: true } },
 			span: 12,
@@ -182,6 +183,12 @@ const Upsert = useUpsert({
 			span: 12,
 		},
 	],
+	onOpened(data) {
+		centsToYuanFields(data, ["originalPrice", "discountAmount", "payAmount", "refundAmount"]);
+	},
+	onSubmit(data, { next }) {
+		next(yuanToCentsFields(data, ["originalPrice", "discountAmount", "payAmount", "refundAmount"]));
+	},
 });
 
 // cl-table
@@ -194,9 +201,9 @@ const Table = useTable({
 		{ label: t("商品ID"), prop: "productId", minWidth: 120 },
 		{ label: t("商品名称"), prop: "productName", minWidth: 120 },
 		{ label: t("数量"), prop: "quantity", minWidth: 120 },
-		{ label: t("商品原价(分)"), prop: "originalPrice", minWidth: 120 },
-		{ label: t("优惠金额(分)"), prop: "discountAmount", minWidth: 120 },
-		{ label: t("实付金额(分)"), prop: "payAmount", minWidth: 120 },
+		{ label: t("商品原价(元)"), prop: "originalPrice", minWidth: 120, formatter: (row: any) => formatYuan(row.originalPrice) },
+		{ label: t("优惠金额(元)"), prop: "discountAmount", minWidth: 120, formatter: (row: any) => formatYuan(row.discountAmount) },
+		{ label: t("实付金额(元)"), prop: "payAmount", minWidth: 120, formatter: (row: any) => formatYuan(row.payAmount) },
 		{
 			label: t("支付方式"),
 			prop: "payMethod",
@@ -222,7 +229,7 @@ const Table = useTable({
 			prop: "payParams",
 			minWidth: 120,
 		},
-		{ label: t("退款金额(分)"), prop: "refundAmount", minWidth: 120 },
+		{ label: t("退款金额(元)"), prop: "refundAmount", minWidth: 120, formatter: (row: any) => formatYuan(row.refundAmount) },
 		{
 			label: t("退款时间"),
 			prop: "refundTime",

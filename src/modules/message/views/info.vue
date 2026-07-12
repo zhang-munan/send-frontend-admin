@@ -38,6 +38,7 @@ import { useCool } from "/@/cool";
 import { useI18n } from "vue-i18n";
 import { reactive } from "vue";
 import UserSelect from "/$/user/components/user-select.vue";
+import { centsToYuanFields, formatYuan, yuanToCentsFields } from "/$/order/utils/money";
 
 const { service } = useCool();
 const { t } = useI18n();
@@ -217,7 +218,7 @@ const Upsert = useUpsert({
 			required: true,
 		},
 		{
-			label: t("扣费金额"),
+			label: t("扣费金额(元)"),
 			prop: "feeAmount",
 			component: { name: "el-input", props: { clearable: true } },
 			span: 12,
@@ -237,6 +238,12 @@ const Upsert = useUpsert({
 			span: 12,
 		},
 	],
+	onOpened(data) {
+		centsToYuanFields(data, ["feeAmount"]);
+	},
+	onSubmit(data, { next }) {
+		next(yuanToCentsFields(data, ["feeAmount"]));
+	},
 });
 
 // cl-table
@@ -292,7 +299,7 @@ const Table = useTable({
 		{ label: t("送达时间"), prop: "deliveredAt", minWidth: 120 },
 		{ label: t("失败原因"), prop: "failReason", minWidth: 120 },
 		{ label: t("重试次数"), prop: "retryCount", minWidth: 120 },
-		{ label: t("扣费金额"), prop: "feeAmount", minWidth: 120 },
+		{ label: t("扣费金额(元)"), prop: "feeAmount", minWidth: 120, formatter: (row: any) => formatYuan(row.feeAmount) },
 		{ label: t("是否免费重发"), prop: "isFreeRetry", minWidth: 120 },
 		{ label: t("发送端IP"), prop: "clientIp", minWidth: 120 },
 		{

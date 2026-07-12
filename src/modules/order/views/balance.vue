@@ -34,6 +34,7 @@ import { useCrud, useTable, useUpsert, useSearch } from "@cool-vue/crud";
 import { useCool } from "/@/cool";
 import { useI18n } from "vue-i18n";
 import UserSelect from "/$/user/components/user-select.vue";
+import { centsToYuanFields, formatYuan, yuanToCentsFields } from "../utils/money";
 
 const { service } = useCool();
 const { t } = useI18n();
@@ -48,7 +49,7 @@ const Upsert = useUpsert({
 			required: true,
 		},
 		{
-			label: t("当前余额(分)"),
+			label: t("当前余额(元)"),
 			prop: "balance",
 			component: { name: "el-input", props: { clearable: true } },
 			span: 12,
@@ -62,20 +63,26 @@ const Upsert = useUpsert({
 			required: true,
 		},
 		{
-			label: t("累计充值(分)"),
+			label: t("累计充值(元)"),
 			prop: "totalRecharge",
 			component: { name: "el-input", props: { clearable: true } },
 			span: 12,
 			required: true,
 		},
 		{
-			label: t("累计消费(分)"),
+			label: t("累计消费(元)"),
 			prop: "totalConsumed",
 			component: { name: "el-input", props: { clearable: true } },
 			span: 12,
 			required: true,
 		},
 	],
+	onOpened(data) {
+		centsToYuanFields(data, ["balance", "totalRecharge", "totalConsumed"]);
+	},
+	onSubmit(data, { next }) {
+		next(yuanToCentsFields(data, ["balance", "totalRecharge", "totalConsumed"]));
+	},
 });
 
 // cl-table
@@ -85,10 +92,10 @@ const Table = useTable({
 		{ label: t("头像"), prop: "userAvatar", minWidth: 120 },
 		{ label: t("手机号"), prop: "userPhone", minWidth: 120 },
 		{ label: t("昵称"), prop: "userNickName", minWidth: 120 },
-		{ label: t("当前余额(分)"), prop: "balance", minWidth: 120 },
+		{ label: t("当前余额(元)"), prop: "balance", minWidth: 120, formatter: (row: any) => formatYuan(row.balance) },
 		{ label: t("剩余消息条数"), prop: "messageQuota", minWidth: 120 },
-		{ label: t("累计充值(分)"), prop: "totalRecharge", minWidth: 120 },
-		{ label: t("累计消费(分)"), prop: "totalConsumed", minWidth: 120 },
+		{ label: t("累计充值(元)"), prop: "totalRecharge", minWidth: 120, formatter: (row: any) => formatYuan(row.totalRecharge) },
+		{ label: t("累计消费(元)"), prop: "totalConsumed", minWidth: 120, formatter: (row: any) => formatYuan(row.totalConsumed) },
 		{
 			label: t("创建时间"),
 			prop: "createTime",
