@@ -1,12 +1,12 @@
 const proxy = {
 	'/dev/': {
-		target: 'http://127.0.0.1:8001',
+		target: 'http://192.168.10.116:8001',
 		changeOrigin: true,
 		rewrite: (path: string) => path.replace(/^\/dev/, '')
 	},
 
 	'/prod/': {
-		target: 'http://124.222.204.121:8001',
+		target: 'http://mljxcloud.com:8001',
 		changeOrigin: true,
 		rewrite: (path: string) => path.replace(/^\/prod/, '/api')
 	}

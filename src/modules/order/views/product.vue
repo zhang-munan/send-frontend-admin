@@ -28,7 +28,7 @@ import { centsToYuanFields, formatYuan, yuanToCentsFields } from '../utils/money
 
 const { service } = useCool();
 
-useCrud({ service: service.order.product }, app => {
+const Crud = useCrud({ service: service.order.product }, app => {
 	app.refresh();
 });
 
