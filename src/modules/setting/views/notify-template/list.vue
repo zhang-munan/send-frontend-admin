@@ -27,12 +27,9 @@ import { useCrud, useTable, useUpsert, useSearch } from '@cool-vue/crud';
 
 const { service } = useCool();
 
-useCrud(
-	{ service: service.setting.notifyTemplate },
-	app => {
-		app.refresh();
-	}
-);
+const Crud = useCrud({ service: service.setting.notifyTemplate }, app => {
+	app.refresh();
+});
 
 const Table = useTable({
 	columns: [

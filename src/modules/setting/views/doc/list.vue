@@ -32,7 +32,7 @@ import { useCrud, useTable, useUpsert, useSearch } from '@cool-vue/crud';
 
 const { service } = useCool();
 
-useCrud(
+const Crud = useCrud(
 	{ service: service.setting.doc },
 	app => {
 		app.refresh();

@@ -708,6 +708,11 @@ declare namespace Eps {
 		isAnonymous?: number;
 
 		/**
+		 * 是否公开到广场 0私密 1公开
+		 */
+		isPublic?: number;
+
+		/**
 		 * 发送者签名
 		 */
 		senderSignature?: string;

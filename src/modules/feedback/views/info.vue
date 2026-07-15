@@ -18,7 +18,13 @@
 							:src="img"
 							:preview-src-list="scope.row.images"
 							:initial-index="idx"
-							style="width: 48px; height: 48px; margin-right: 4px; border-radius: 4px; object-fit: cover"
+							style="
+								width: 48px;
+								height: 48px;
+								margin-right: 4px;
+								border-radius: 4px;
+								object-fit: cover;
+							"
 						/>
 					</template>
 					<span v-else style="color: #ccc">无</span>
@@ -99,34 +105,31 @@
 
 <script lang="ts" setup>
 defineOptions({
-	name: 'feedback-info',
+	name: 'feedback-info'
 });
 
 import { useCrud, useTable, useSearch } from '@cool-vue/crud';
 import { useCool } from '/@/cool';
-import { reactive, ref } from 'vue';
+import { reactive } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 
 const { service } = useCool();
-
-const Crud = ref();
-const Table = ref();
 
 const typeOptions = [
 	{ label: '功能建议', value: 0, type: 'success' },
 	{ label: '问题反馈', value: 1, type: 'danger' },
 	{ label: '投诉举报', value: 2, type: 'warning' },
-	{ label: '其他', value: 3, type: 'info' },
+	{ label: '其他', value: 3, type: 'info' }
 ];
 
 const statusOptions = [
 	{ label: '待处理', value: 0, type: 'warning' },
 	{ label: '已回复', value: 1, type: 'success' },
-	{ label: '已关闭', value: 2, type: 'info' },
+	{ label: '已关闭', value: 2, type: 'info' }
 ];
 
 // cl-table
-useTable({
+const Table = useTable({
 	columns: [
 		{ type: 'selection' },
 		{ label: 'ID', prop: 'id', width: 70 },
@@ -136,32 +139,32 @@ useTable({
 			label: '反馈类型',
 			prop: 'type',
 			width: 100,
-			dict: typeOptions,
+			dict: typeOptions
 		},
 		{
 			label: '反馈内容',
 			prop: 'content',
 			minWidth: 200,
-			showOverflowTooltip: true,
+			showOverflowTooltip: true
 		},
 		{
 			label: '截图',
 			prop: 'images',
 			width: 160,
-			component: { name: 'slot-images' },
+			component: { name: 'slot-images' }
 		},
 		{ label: '联系方式', prop: 'contact', minWidth: 130 },
 		{
 			label: '状态',
 			prop: 'status',
 			width: 100,
-			dict: statusOptions,
+			dict: statusOptions
 		},
 		{
 			label: '管理员回复',
 			prop: 'reply',
 			minWidth: 180,
-			showOverflowTooltip: true,
+			showOverflowTooltip: true
 		},
 		{ label: '回复时间', prop: 'replyTime', width: 160 },
 		{
@@ -169,14 +172,14 @@ useTable({
 			prop: 'createTime',
 			width: 170,
 			sortable: 'desc',
-			component: { name: 'cl-date-text' },
+			component: { name: 'cl-date-text' }
 		},
-		{ type: 'op', label: '操作', width: 200, fixed: 'right' },
-	],
+		{ type: 'op', label: '操作', width: 200, fixed: 'right' }
+	]
 });
 
 // cl-search
-useSearch({
+const Search = useSearch({
 	items: [
 		{
 			label: '反馈类型',
@@ -184,8 +187,8 @@ useSearch({
 			component: {
 				name: 'el-select',
 				props: { clearable: true },
-				options: typeOptions,
-			},
+				options: typeOptions
+			}
 		},
 		{
 			label: '状态',
@@ -193,19 +196,16 @@ useSearch({
 			component: {
 				name: 'el-select',
 				props: { clearable: true },
-				options: statusOptions,
-			},
-		},
-	],
+				options: statusOptions
+			}
+		}
+	]
 });
 
 // cl-crud
-useCrud(
-	{ service: service.feedback.info },
-	(app) => {
-		app.refresh();
-	},
-);
+const Crud = useCrud({ service: service.feedback.info }, app => {
+	app.refresh();
+});
 
 // 回复对话框
 const replyDialog = reactive({
@@ -213,7 +213,7 @@ const replyDialog = reactive({
 	loading: false,
 	row: null as any,
 	reply: '',
-	status: 1,
+	status: 1
 });
 
 function openReply(row: any) {
@@ -235,42 +235,39 @@ async function submitReply() {
 			method: 'POST',
 			data: {
 				id: replyDialog.row.id,
-				reply: replyDialog.reply.trim(),
-			},
+				reply: replyDialog.reply.trim()
+			}
 		});
 		if (replyDialog.status !== 1) {
 			await service.feedback.info.request({
 				url: '/admin/feedback/info/updateStatus',
 				method: 'POST',
-				data: { id: replyDialog.row.id, status: replyDialog.status },
+				data: { id: replyDialog.row.id, status: replyDialog.status }
 			});
 		}
 		ElMessage.success('回复成功');
 		replyDialog.visible = false;
 		Table.value?.refresh();
-	}
-	catch (e: any) {
+	} catch (e: any) {
 		ElMessage.error(e.message || '操作失败');
-	}
-	finally {
+	} finally {
 		replyDialog.loading = false;
 	}
 }
 
 async function closeItem(row: any) {
 	await ElMessageBox.confirm('确认将该反馈标记为"已关闭"吗？', '提示', {
-		type: 'warning',
+		type: 'warning'
 	});
 	try {
 		await service.feedback.info.request({
 			url: '/admin/feedback/info/updateStatus',
 			method: 'POST',
-			data: { id: row.id, status: 2 },
+			data: { id: row.id, status: 2 }
 		});
 		ElMessage.success('已关闭');
 		Table.value?.refresh();
-	}
-	catch (e: any) {
+	} catch (e: any) {
 		ElMessage.error(e.message || '操作失败');
 	}
 }
@@ -281,8 +278,7 @@ async function deleteItem(row: any) {
 		await service.feedback.info.delete({ ids: [row.id] });
 		ElMessage.success('已删除');
 		Table.value?.refresh();
-	}
-	catch (e: any) {
+	} catch (e: any) {
 		ElMessage.error(e.message || '删除失败');
 	}
 }
