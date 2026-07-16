@@ -50,6 +50,7 @@ const options = reactive({
 		{ label: t("支付宝"), value: 2 },
 		{ label: t("余额"), value: 3 },
 		{ label: t("模拟支付"), value: 4 },
+		{ label: t("套餐余额"), value: 5 },
 	],
 	status: [
 		{ label: t("待支付"), value: 0 },

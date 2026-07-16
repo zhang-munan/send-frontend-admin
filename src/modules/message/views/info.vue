@@ -299,7 +299,13 @@ const Table = useTable({
 		{ label: t("送达时间"), prop: "deliveredAt", minWidth: 120 },
 		{ label: t("失败原因"), prop: "failReason", minWidth: 120 },
 		{ label: t("重试次数"), prop: "retryCount", minWidth: 120 },
-		{ label: t("扣费金额(元)"), prop: "feeAmount", minWidth: 120, formatter: (row: any) => formatYuan(row.feeAmount) },
+		{
+			label: t("扣费金额(元)"),
+			prop: "feeAmount",
+			minWidth: 120,
+			formatter: (row: any) =>
+				row.payType === 1 ? t("套餐余额") : formatYuan(row.feeAmount),
+		},
 		{ label: t("是否免费重发"), prop: "isFreeRetry", minWidth: 120 },
 		{ label: t("发送端IP"), prop: "clientIp", minWidth: 120 },
 		{

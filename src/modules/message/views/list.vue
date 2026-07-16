@@ -133,7 +133,8 @@ const Table = useTable({
 			prop: 'feeAmount',
 			label: '费用(元)',
 			width: 90,
-			formatter: (row: any) => formatYuan(row.feeAmount)
+			formatter: (row: any) =>
+				row.payType === 1 ? '套餐余额' : formatYuan(row.feeAmount)
 		},
 		{ prop: 'createTime', label: '创建时间', width: 170, sortable: true },
 		{
