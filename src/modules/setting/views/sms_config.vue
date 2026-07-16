@@ -12,7 +12,12 @@
 			<cl-table ref="Table">
 				<!-- 主通道标记 -->
 				<template #column-isPrimary="{ scope }">
-					<el-tag v-if="scope.row.isPrimary === 1" type="danger" size="small" effect="dark">
+					<el-tag
+						v-if="scope.row.isPrimary === 1"
+						type="danger"
+						size="small"
+						effect="dark"
+					>
 						主通道
 					</el-tag>
 					<el-tag v-else type="info" size="small" effect="plain">备用</el-tag>
@@ -24,20 +29,6 @@
 						:model-value="scope.row.isActive === 1"
 						@change="onToggleActive(scope.row)"
 					/>
-				</template>
-
-				<!-- 操作列 -->
-				<template #column-op="{ scope }">
-					<el-button
-						v-if="scope.row.isPrimary !== 1"
-						link
-						type="primary"
-						size="small"
-						@click="onSetPrimary(scope.row)"
-					>
-						设为主通道
-					</el-button>
-					<cl-table-op-btns :scope="scope" :buttons="['edit', 'delete']" />
 				</template>
 			</cl-table>
 		</cl-row>
@@ -53,13 +44,13 @@
 
 <script lang="ts" setup>
 defineOptions({
-	name: "setting-sms_config",
+	name: 'setting-sms_config'
 });
 
-import { ElMessage, ElMessageBox } from "element-plus";
-import { useCrud, useTable, useUpsert, useSearch } from "@cool-vue/crud";
-import { useCool } from "/@/cool";
-import { centsToYuanFields, formatYuan, yuanToCentsFields } from "/$/order/utils/money";
+import { ElMessage, ElMessageBox } from 'element-plus';
+import { useCrud, useTable, useUpsert, useSearch } from '@cool-vue/crud';
+import { useCool } from '/@/cool';
+import { centsToYuanFields, formatYuan, yuanToCentsFields } from '/$/order/utils/money';
 
 const { service } = useCool();
 
@@ -67,217 +58,250 @@ const { service } = useCool();
 const Upsert = useUpsert({
 	items: [
 		{
-			label: "通道名称",
-			prop: "channelName",
+			label: '通道名称',
+			prop: 'channelName',
 			required: true,
 			span: 12,
 			component: {
-				name: "el-select",
+				name: 'el-select',
 				props: { clearable: true },
 				options: [
-					{ label: "阿里云", value: "aliyun" },
-					{ label: "腾讯云", value: "tencent" },
-					{ label: "其他", value: "other" },
-				],
-			},
+					{ label: '阿里云', value: 'aliyun' },
+					{ label: '腾讯云', value: 'tencent' },
+					{ label: '其他', value: 'other' }
+				]
+			}
 		},
 		{
-			label: "短信签名",
-			prop: "signName",
-			required: true,
-			span: 12,
-			component: { name: "el-input", props: { clearable: true, placeholder: "与服务商申请一致" } },
-		},
-		{
-			label: "短信模板编码",
-			prop: "templateCode",
-			required: true,
-			span: 12,
-			component: { name: "el-input", props: { clearable: true, placeholder: "如 SMS_12345678" } },
-		},
-		{
-			label: "AccessKey",
-			prop: "accessKey",
-			required: true,
-			span: 12,
-			component: { name: "el-input", props: { clearable: true, placeholder: "服务商 AccessKey ID" } },
-		},
-		{
-			label: "AccessSecret",
-			prop: "accessSecret",
+			label: '短信签名',
+			prop: 'signName',
 			required: true,
 			span: 12,
 			component: {
-				name: "el-input",
-				props: { clearable: true, showPassword: true, placeholder: "服务商 AccessSecret" },
-			},
+				name: 'el-input',
+				props: { clearable: true, placeholder: '与服务商申请一致' }
+			}
 		},
 		{
-			label: "API 端点",
-			prop: "endpoint",
+			label: '短信模板编码',
+			prop: 'templateCode',
+			required: true,
 			span: 12,
 			component: {
-				name: "el-input",
-				props: { clearable: true, placeholder: "可选，留空使用默认端点" },
-			},
+				name: 'el-input',
+				props: { clearable: true, placeholder: '如 SMS_12345678' }
+			}
 		},
 		{
-			label: "日发送上限",
-			prop: "dailyLimit",
+			label: 'AccessKey',
+			prop: 'accessKey',
+			required: true,
+			span: 12,
+			component: {
+				name: 'el-input',
+				props: { clearable: true, placeholder: '服务商 AccessKey ID' }
+			}
+		},
+		{
+			label: 'AccessSecret',
+			prop: 'accessSecret',
+			required: true,
+			span: 12,
+			component: {
+				name: 'el-input',
+				props: { clearable: true, showPassword: true, placeholder: '服务商 AccessSecret' }
+			}
+		},
+		{
+			label: 'API 端点',
+			prop: 'endpoint',
+			span: 12,
+			component: {
+				name: 'el-input',
+				props: { clearable: true, placeholder: '可选，留空使用默认端点' }
+			}
+		},
+		{
+			label: '日发送上限',
+			prop: 'dailyLimit',
 			required: true,
 			span: 12,
 			value: 10000,
 			component: {
-				name: "el-input-number",
-				props: { min: 1, max: 1000000, step: 1000, style: "width: 100%" },
-			},
+				name: 'el-input-number',
+				props: { min: 1, max: 1000000, step: 1000, style: 'width: 100%' }
+			}
 		},
 		{
-			label: "通道余额(元)",
-			prop: "balance",
+			label: '通道余额(元)',
+			prop: 'balance',
 			span: 12,
 			component: {
-				name: "el-input-number",
-				props: { min: 0, precision: 2, step: 0.01, style: "width: 100%", placeholder: "可选" },
-			},
+				name: 'el-input-number',
+				props: {
+					min: 0,
+					precision: 2,
+					step: 0.01,
+					style: 'width: 100%',
+					placeholder: '可选'
+				}
+			}
 		},
 		{
-			label: "是否启用",
-			prop: "isActive",
+			label: '是否启用',
+			prop: 'isActive',
 			span: 12,
 			value: 1,
 			component: {
-				name: "el-radio-group",
+				name: 'el-radio-group',
 				options: [
-					{ label: "启用", value: 1 },
-					{ label: "禁用", value: 0 },
-				],
-			},
-		},
+					{ label: '启用', value: 1 },
+					{ label: '禁用', value: 0 }
+				]
+			}
+		}
 	],
 	onOpened(data) {
-		centsToYuanFields(data, ["balance"]);
+		centsToYuanFields(data, ['balance']);
 	},
 	onSubmit(data, { next }) {
-		next(yuanToCentsFields(data, ["balance"]));
-	},
+		next(yuanToCentsFields(data, ['balance']));
+	}
 });
 
 // cl-table
 const Table = useTable({
 	columns: [
-		{ type: "selection" },
+		{ type: 'selection' },
 		{
-			label: "通道名称",
-			prop: "channelName",
+			label: '通道名称',
+			prop: 'channelName',
 			minWidth: 100,
 			dict: [
-				{ label: "阿里云", value: "aliyun", type: "primary" },
-				{ label: "腾讯云", value: "tencent", type: "success" },
-				{ label: "其他", value: "other", type: "warning" },
-			],
+				{ label: '阿里云', value: 'aliyun', type: 'primary' },
+				{ label: '腾讯云', value: 'tencent', type: 'success' },
+				{ label: '其他', value: 'other', type: 'warning' }
+			]
 		},
-		{ label: "短信签名", prop: "signName", minWidth: 120 },
-		{ label: "模板编码", prop: "templateCode", minWidth: 140 },
-		{ label: "主通道", prop: "isPrimary", minWidth: 90 },
-		{ label: "启用状态", prop: "isActive", minWidth: 90 },
-		{ label: "日发送上限", prop: "dailyLimit", minWidth: 110 },
+		{ label: '短信签名', prop: 'signName', minWidth: 120 },
+		{ label: '模板编码', prop: 'templateCode', minWidth: 140 },
+		{ label: '主通道', prop: 'isPrimary', minWidth: 90 },
+		{ label: '启用状态', prop: 'isActive', minWidth: 90 },
+		{ label: '日发送上限', prop: 'dailyLimit', minWidth: 110 },
 		{
-			label: "余额(元)",
-			prop: "balance",
+			label: '余额(元)',
+			prop: 'balance',
 			minWidth: 100,
-			formatter: (row: any) => (row.balance != null ? `¥${formatYuan(row.balance)}` : "-"),
+			formatter: (row: any) => (row.balance != null ? `¥${formatYuan(row.balance)}` : '-')
 		},
 		{
-			label: "API 端点",
-			prop: "endpoint",
+			label: 'API 端点',
+			prop: 'endpoint',
 			minWidth: 160,
 			showOverflowTooltip: true,
-			formatter: (row: any) => row.endpoint || "-",
+			formatter: (row: any) => row.endpoint || '-'
 		},
 		{
-			label: "创建时间",
-			prop: "createTime",
+			label: '创建时间',
+			prop: 'createTime',
 			minWidth: 170,
-			sortable: "desc",
-			component: { name: "cl-date-text" },
+			sortable: 'desc',
+			component: { name: 'cl-date-text' }
 		},
-		{ type: "op", width: 200 },
-	],
+		{
+			type: 'op',
+			width: 240,
+			buttons: ({ scope }: any) => [
+				...(scope.row.isPrimary !== 1
+					? [
+							{
+								label: '设为主通道',
+								type: 'primary',
+								onClick({ scope }: any) {
+									onSetPrimary(scope.row);
+								}
+							}
+						]
+					: []),
+				'edit',
+				'delete'
+			]
+		}
+	]
 });
 
 // cl-search
 const Search = useSearch({
 	items: [
 		{
-			label: "通道名称",
-			prop: "channelName",
+			label: '通道名称',
+			prop: 'channelName',
 			component: {
-				name: "el-select",
+				name: 'el-select',
 				props: { clearable: true },
 				options: [
-					{ label: "阿里云", value: "aliyun" },
-					{ label: "腾讯云", value: "tencent" },
-					{ label: "其他", value: "other" },
-				],
-			},
+					{ label: '阿里云', value: 'aliyun' },
+					{ label: '腾讯云', value: 'tencent' },
+					{ label: '其他', value: 'other' }
+				]
+			}
 		},
 		{
-			label: "是否主通道",
-			prop: "isPrimary",
+			label: '是否主通道',
+			prop: 'isPrimary',
 			component: {
-				name: "el-select",
+				name: 'el-select',
 				props: { clearable: true },
 				options: [
-					{ label: "主通道", value: 1 },
-					{ label: "备用", value: 0 },
-				],
-			},
+					{ label: '主通道', value: 1 },
+					{ label: '备用', value: 0 }
+				]
+			}
 		},
 		{
-			label: "启用状态",
-			prop: "isActive",
+			label: '启用状态',
+			prop: 'isActive',
 			component: {
-				name: "el-select",
+				name: 'el-select',
 				props: { clearable: true },
 				options: [
-					{ label: "启用", value: 1 },
-					{ label: "禁用", value: 0 },
-				],
-			},
-		},
-	],
+					{ label: '启用', value: 1 },
+					{ label: '禁用', value: 0 }
+				]
+			}
+		}
+	]
 });
 
 // cl-crud
 const Crud = useCrud(
 	{
-		service: service.setting.smsConfig,
+		service: service.setting.smsConfig
 	},
-	(app) => {
+	app => {
 		app.refresh();
-	},
+	}
 );
 
 // 设为主通道
 async function onSetPrimary(row: any) {
 	await ElMessageBox.confirm(
 		`确定将「${row.channelName}（${row.signName}）」设为主通道？原主通道将自动降为备用通道。`,
-		"设置主通道",
-		{ confirmButtonText: "确定", cancelButtonText: "取消", type: "warning" },
+		'设置主通道',
+		{ confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }
 	);
 	await service.setting.smsConfig.setPrimary({ id: row.id });
-	ElMessage.success("主通道设置成功");
+	ElMessage.success('主通道设置成功');
 	Crud.value?.refresh();
 }
 
 // 切换启用状态
 async function onToggleActive(row: any) {
-	const action = row.isActive === 1 ? "禁用" : "启用";
-	await ElMessageBox.confirm(`确定${action}该通道？`, "操作确认", {
-		confirmButtonText: "确定",
-		cancelButtonText: "取消",
-		type: "warning",
+	const action = row.isActive === 1 ? '禁用' : '启用';
+	await ElMessageBox.confirm(`确定${action}该通道？`, '操作确认', {
+		confirmButtonText: '确定',
+		cancelButtonText: '取消',
+		type: 'warning'
 	});
 	await service.setting.smsConfig.toggleActive({ id: row.id });
 	ElMessage.success(`${action}成功`);

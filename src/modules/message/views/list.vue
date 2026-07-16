@@ -8,18 +8,7 @@
 		</cl-row>
 
 		<cl-row>
-			<cl-table ref="Table">
-				<template #column-op="{ scope }">
-					<el-button
-						v-if="scope.row.status === 0"
-						type="warning"
-						size="small"
-						@click="openAudit(scope.row)"
-					>
-						审核
-					</el-button>
-				</template>
-			</cl-table>
+			<cl-table ref="Table" />
 		</cl-row>
 
 		<cl-row>
@@ -34,7 +23,7 @@
 			<el-form label-width="80px">
 				<el-form-item label="审核结果">
 					<el-select
-						v-model="audit.form.auditStatus"
+						v-model="audit.form.auditStatus as any"
 						placeholder="请选择"
 						style="width: 100%"
 					>
@@ -147,7 +136,24 @@ const Table = useTable({
 			formatter: (row: any) => formatYuan(row.feeAmount)
 		},
 		{ prop: 'createTime', label: '创建时间', width: 170, sortable: true },
-		{ type: 'op', label: '操作', width: 120, fixed: 'right' }
+		{
+			type: 'op',
+			label: '操作',
+			width: 120,
+			fixed: 'right',
+			buttons: ({ scope }: any) =>
+				scope.row.status === 0
+					? [
+							{
+								label: '审核',
+								type: 'warning',
+								onClick({ scope }: any) {
+									openAudit(scope.row);
+								}
+							}
+						]
+					: []
+		}
 	]
 });
 
@@ -305,7 +311,7 @@ async function submitAudit() {
 		});
 		ElMessage.success('审核完成');
 		audit.visible = false;
-		Table.value?.refresh();
+		Crud.value?.refresh();
 	} catch (e: any) {
 		ElMessage.error(e.message || '审核失败');
 	} finally {

@@ -89,7 +89,12 @@ const Upsert = useUpsert({
 const Table = useTable({
 	columns: [
 		{ label: t("#"), type: "index" },
-		{ label: t("头像"), prop: "userAvatar", minWidth: 120 },
+		{
+			label: t("头像"),
+			prop: "userAvatar",
+			width: 88,
+			component: { name: "cl-image", props: { size: 48, radius: "50%" } },
+		},
 		{ label: t("手机号"), prop: "userPhone", minWidth: 120 },
 		{ label: t("昵称"), prop: "userNickName", minWidth: 120 },
 		{ label: t("当前余额(元)"), prop: "balance", minWidth: 120, formatter: (row: any) => formatYuan(row.balance) },

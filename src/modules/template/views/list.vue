@@ -45,24 +45,6 @@
 						@change="toggleActive(scope.row)"
 					/>
 				</template>
-
-				<!-- 操作列：编辑 / 删除 / 审核 -->
-				<template #column-op="{ scope }">
-					<el-button type="primary" link size="small" @click="Upsert?.open(scope.row)">
-						编辑
-					</el-button>
-					<el-button type="danger" link size="small" @click="rowDelete(scope.row)">
-						删除
-					</el-button>
-					<el-button
-						v-if="scope.row.auditStatus === 0"
-						type="warning"
-						size="small"
-						@click="openAudit(scope.row)"
-					>
-						审核
-					</el-button>
-				</template>
 			</cl-table>
 		</cl-row>
 
@@ -399,8 +381,35 @@ const Table = useTable({
 		{
 			label: t('操作'),
 			type: 'op',
-			width: 160,
-			fixed: 'right'
+			width: 220,
+			fixed: 'right',
+			buttons: ({ scope }: any) => [
+				{
+					label: t('编辑'),
+					type: 'primary',
+					onClick({ scope }: any) {
+						Upsert.value?.edit(scope.row);
+					}
+				},
+				{
+					label: t('删除'),
+					type: 'danger',
+					onClick({ scope }: any) {
+						rowDelete(scope.row);
+					}
+				},
+				...(scope.row.auditStatus === 0
+					? [
+							{
+								label: t('审核'),
+								type: 'warning',
+								onClick({ scope }: any) {
+									openAudit(scope.row);
+								}
+							}
+						]
+					: [])
+			]
 		}
 	]
 });

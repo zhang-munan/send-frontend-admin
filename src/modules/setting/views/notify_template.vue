@@ -30,7 +30,7 @@
 
 <script lang="ts" setup>
 defineOptions({
-	name: "setting-notify_template",
+	name: "setting-notify-template",
 });
 
 import { useCrud, useTable, useUpsert, useSearch } from "@cool-vue/crud";
@@ -142,7 +142,7 @@ const Search = useSearch();
 // cl-crud
 const Crud = useCrud(
 	{
-		service: service.setting.notify_template,
+		service: service.setting.notifyTemplate,
 	},
 	(app) => {
 		app.refresh();

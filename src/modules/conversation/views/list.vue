@@ -143,18 +143,24 @@ const Upsert = useUpsert({
 const Table = useTable({
 	columns: [
 		{ type: "selection" },
-		{ label: t("昵称"), prop: "userName", minWidth: 120 },
+		{ label: t("昵称"), prop: "userName", minWidth: 140, showOverflowTooltip: true },
 		{
 			label: t("收件人手机号哈希"),
 			prop: "receiverPhoneHash",
-			minWidth: 120,
+			minWidth: 280,
+			showOverflowTooltip: true,
 		},
 		{
 			label: t("收件人脱敏号码"),
 			prop: "receiverPhoneMask",
-			minWidth: 120,
+			minWidth: 150,
 		},
-		{ label: t("最后一条消息摘要"), prop: "lastMsgContent", minWidth: 120 },
+		{
+			label: t("最后一条消息摘要"),
+			prop: "lastMsgContent",
+			minWidth: 260,
+			showOverflowTooltip: true,
+		},
 		{
 			label: t("最后消息时间"),
 			prop: "lastMsgTime",
@@ -165,21 +171,21 @@ const Table = useTable({
 		{
 			label: t("最后一条是否为回复"),
 			prop: "lastMsgIsReply",
-			minWidth: 120,
+			minWidth: 160,
 		},
-		{ label: t("未读回复数"), prop: "unreadCount", minWidth: 120 },
-		{ label: t("消息总数"), prop: "msgCount", minWidth: 120 },
+		{ label: t("未读回复数"), prop: "unreadCount", minWidth: 110 },
+		{ label: t("消息总数"), prop: "msgCount", minWidth: 100 },
 		{
 			label: t("收件人是否已退订"),
 			prop: "isReceiverUnsubscribed",
-			minWidth: 120,
+			minWidth: 170,
 		},
-		{ label: t("是否标记重要"), prop: "isMarked", minWidth: 120 },
-		{ label: t("标记类型"), prop: "markType", minWidth: 120 },
+		{ label: t("是否标记重要"), prop: "isMarked", minWidth: 140 },
+		{ label: t("标记类型"), prop: "markType", minWidth: 130, showOverflowTooltip: true },
 		{
 			label: t("状态"),
 			prop: "status",
-			minWidth: 120,
+			minWidth: 100,
 			dict: options.status,
 		},
 		{
@@ -196,7 +202,6 @@ const Table = useTable({
 			sortable: "custom",
 			component: { name: "cl-date-text" },
 		},
-		{ type: "op", buttons: ["edit", "delete"] },
 	],
 });
 
