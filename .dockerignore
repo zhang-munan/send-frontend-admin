@@ -1,5 +1,7 @@
+.git
+.github
 node_modules
-.DS_Store
 dist
-dist-ssr
-*.local
+build
+.env.local
+npm-debug.log*

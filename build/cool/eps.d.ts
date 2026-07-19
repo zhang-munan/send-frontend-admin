@@ -922,7 +922,7 @@ declare namespace Eps {
 		payAmount?: BigInt;
 
 		/**
-		 * 支付方式：1微信 2支付宝 3余额 4模拟支付
+		 * 支付方式：1微信 2支付宝 3余额 4模拟支付 5套餐余额
 		 */
 		payMethod?: number;
 
@@ -3844,8 +3844,6 @@ declare namespace Eps {
 	}
 
 	type Request = (options: RequestOptions) => Promise<any>;
-
-	type DictKey = "brand" | "occupation" | "templateCategory";
 
 	type Service = {
 		request: Request;
