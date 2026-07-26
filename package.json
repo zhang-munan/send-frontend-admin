@@ -3,6 +3,7 @@
 	"version": "8.0.0",
 	"type": "module",
 	"packageManager": "pnpm@9.15.9",
+	"packages": ["packages/*"],
 	"scripts": {
 		"dev": "vite --host",
 		"build": "vite build",
