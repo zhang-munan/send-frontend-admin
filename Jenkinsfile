@@ -15,7 +15,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 git credentialsId: 'ghcr-credentials',
-                    url: 'https://github.com/zhang-munan/send-admin-vue.git',
+                    url: 'https://github.com/zhang-munan/send-frontend-admin.git',
                     branch: 'release/0.x'
             }
         }
