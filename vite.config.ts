@@ -43,7 +43,8 @@ export default ({ mode }: ConfigEnv): UserConfig => {
 				include: [toPath('./src/{modules,plugins}/**/locales/**')]
 			})
 		],
-		base: '/',
+		// 生产环境通过 https://mljxcloud.com/bangni_admin/ 访问。
+		base: isDev ? '/' : '/bangni_admin/',
 		server: {
 			port: 9000,
 			proxy,
