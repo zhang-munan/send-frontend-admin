@@ -8,6 +8,7 @@ COPY packages/crud/package.json packages/crud/
 COPY packages/vite-plugin/package.json packages/vite-plugin/
 RUN pnpm install --no-frozen-lockfile
 COPY . .
+RUN test -s build/cool/eps.json
 RUN pnpm run build
 
 FROM nginx:1.27-alpine
