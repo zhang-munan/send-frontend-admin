@@ -962,6 +962,36 @@ declare namespace Eps {
 		refundReason?: string;
 
 		/**
+		 * 退款状态：0未申请 1待审批 2已退款 3已拒绝 4退款处理中 5退款失败
+		 */
+		refundStatus?: number;
+
+		/**
+		 * 退款申请时间
+		 */
+		refundApplyTime?: Date;
+
+		/**
+		 * 退款审批时间
+		 */
+		refundAuditTime?: Date;
+
+		/**
+		 * 退款审批人ID
+		 */
+		refundAuditUserId?: BigInt;
+
+		/**
+		 * 退款拒绝或失败原因
+		 */
+		refundRejectReason?: string;
+
+		/**
+		 * 商户退款单号
+		 */
+		refundNo?: string;
+
+		/**
 		 * 客户端IP
 		 */
 		clientIp?: string;
@@ -2980,6 +3010,21 @@ declare namespace Eps {
 
 	interface OrderInfo {
 		/**
+		 * 审批退款申请
+		 */
+		refundAudit(data?: any): Promise<any>;
+
+		/**
+		 * 重试微信退款
+		 */
+		retryRefund(data?: any): Promise<any>;
+
+		/**
+		 * 同步退款状态
+		 */
+		syncRefund(data?: any): Promise<any>;
+
+		/**
 		 * 删除
 		 */
 		delete(data?: any): Promise<any>;
@@ -3007,12 +3052,24 @@ declare namespace Eps {
 		/**
 		 * 权限标识
 		 */
-		permission: { delete: string; close: string; info: string; list: string; page: string };
+		permission: {
+			refundAudit: string;
+			retryRefund: string;
+			syncRefund: string;
+			delete: string;
+			close: string;
+			info: string;
+			list: string;
+			page: string;
+		};
 
 		/**
 		 * 权限状态
 		 */
 		_permission: {
+			refundAudit: boolean;
+			retryRefund: boolean;
+			syncRefund: boolean;
 			delete: boolean;
 			close: boolean;
 			info: boolean;
