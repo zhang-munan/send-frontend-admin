@@ -651,6 +651,88 @@ declare namespace Eps {
 		[key: string]: any;
 	}
 
+	interface MessageBlacklistEntity {
+		/**
+		 * ID
+		 */
+		id?: number;
+
+		/**
+		 * 执行拉黑的收件用户ID
+		 */
+		blockerUserId?: BigInt;
+
+		/**
+		 * 被拉黑的发送用户ID
+		 */
+		blockedUserId?: BigInt;
+
+		/**
+		 * 发起拉黑的会话ID
+		 */
+		sourceConversationId?: BigInt;
+
+		/**
+		 * 拉黑时已成功送达的消息数
+		 */
+		deliveredMessageCount?: number;
+
+		/**
+		 * 收件端展示用的最近消息摘要
+		 */
+		lastMessagePreview?: string;
+
+		/**
+		 * 拉黑时间
+		 */
+		blockedAt?: Date;
+
+		/**
+		 * 解除拉黑时间
+		 */
+		unblockedAt?: Date;
+
+		/**
+		 * 状态 0已解除 1拉黑中
+		 */
+		status?: number;
+
+		/**
+		 * 创建时间
+		 */
+		createTime?: string;
+
+		/**
+		 * 更新时间
+		 */
+		updateTime?: string;
+
+		/**
+		 * 昵称
+		 */
+		blockerNickName?: string;
+
+		/**
+		 * 手机号
+		 */
+		blockerPhone?: string;
+
+		/**
+		 * 昵称
+		 */
+		blockedNickName?: string;
+
+		/**
+		 * 手机号
+		 */
+		blockedPhone?: string;
+
+		/**
+		 * 任意键值
+		 */
+		[key: string]: any;
+	}
+
 	interface MessageInfoEntity {
 		/**
 		 * ID
@@ -2010,6 +2092,11 @@ declare namespace Eps {
 		list: MessageInfoEntity[];
 	}
 
+	interface MessageBlacklistPageResponse {
+		pagination: PagePagination;
+		list: MessageBlacklistEntity[];
+	}
+
 	interface OrderBalancePageResponse {
 		pagination: PagePagination;
 		list: UserBalanceEntity[];
@@ -2988,6 +3075,35 @@ declare namespace Eps {
 		request: Request;
 	}
 
+	interface MessageBlacklist {
+		/**
+		 * 管理员解除拉黑
+		 */
+		unblock(data?: any): Promise<any>;
+
+		/**
+		 * 单个信息
+		 */
+		info(data?: any): Promise<MessageBlacklistEntity>;
+
+		/**
+		 * 分页查询
+		 */
+		page(data?: any): Promise<MessageBlacklistPageResponse>;
+
+		/**
+		 * 权限标识
+		 */
+		permission: { unblock: string; info: string; page: string };
+
+		/**
+		 * 权限状态
+		 */
+		_permission: { unblock: boolean; info: boolean; page: boolean };
+
+		request: Request;
+	}
+
 	interface OrderBalance {
 		/**
 		 * 调整消息配额
@@ -3938,7 +4054,7 @@ declare namespace Eps {
 		demo: { goods: DemoGoods; tenant: DemoTenant };
 		dict: { info: DictInfo; type: DictType };
 		feedback: { info: FeedbackInfo };
-		message: { info: MessageInfo };
+		message: { info: MessageInfo; blacklist: MessageBlacklist };
 		order: { balance: OrderBalance; info: OrderInfo; product: OrderProduct };
 		plugin: { info: PluginInfo };
 		recycle: { data: RecycleData };
