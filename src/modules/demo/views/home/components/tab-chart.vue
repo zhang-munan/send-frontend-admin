@@ -1,9 +1,9 @@
 <template>
-	<div class="card">
+	<div v-loading="loading" class="card">
 		<div class="card__header">
-			<cl-select-button v-model="tab.active" :options="tab.list" @change="onChange" />
+			<cl-select-button v-model="tab.active" :options="tab.list" />
 
-			<span class="year">{{ $t('{year}年', { year: dayjs().year() }) }}</span>
+			<span class="year">{{ $t('{year}年', { year }) }}</span>
 		</div>
 
 		<v-chart :option="chartOption" autoresize />
@@ -11,15 +11,18 @@
 </template>
 
 <script lang="ts" setup>
-import { range } from 'lodash-es';
-import { computed, onMounted, reactive } from 'vue';
-import dayjs from 'dayjs';
-import { useDark } from '@vueuse/core';
+import { computed, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useTheme } from '/#/theme';
+import type { MonthlyOrderStat } from '../dashboard';
+
+const props = defineProps<{
+	data: MonthlyOrderStat[];
+	year: number;
+	loading: boolean;
+}>();
 
 const { t } = useI18n();
-const isDark = useDark();
 const theme = useTheme();
 
 const tab = reactive({
@@ -27,17 +30,17 @@ const tab = reactive({
 
 	list: [
 		{
-			label: t('销售金额'),
+			label: t('实收金额'),
 			value: 'sales'
 		},
 		{
-			label: t('销售订单'),
+			label: t('已支付订单'),
 			value: 'order'
 		}
 	]
 });
 
-const chartOption = reactive({
+const chartOption = computed(() => ({
 	grid: {
 		containLabel: true,
 		left: '5%',
@@ -45,7 +48,7 @@ const chartOption = reactive({
 	},
 	xAxis: {
 		type: 'category',
-		data: [] as string[],
+		data: props.data.map(item => t('{i}月', { i: item.month })),
 		offset: 5,
 		axisLine: {
 			show: false
@@ -71,8 +74,8 @@ const chartOption = reactive({
 		trigger: 'axis',
 		formatter: (comp: any) => {
 			const name = tab.list.find(e => e.value === tab.active)?.label;
-
-			return `${name}：${comp[0]?.value || 0}`;
+			const value = comp[0]?.value || 0;
+			return `${name}：${tab.active === 'sales' ? `¥${Number(value).toFixed(2)}` : value}`;
 		},
 		axisPointer: {
 			show: true,
@@ -86,38 +89,15 @@ const chartOption = reactive({
 		{
 			barWidth: 25,
 			type: 'bar',
-			data: [] as number[],
+			data: props.data.map(item =>
+				tab.active === 'sales' ? Number((item.revenue / 100).toFixed(2)) : item.orderCount
+			),
 			itemStyle: {
-				color: computed(() => theme.color)
+				color: theme.color
 			}
-		},
-		{
-			type: 'bar',
-			barWidth: 25,
-			xAxisIndex: 0,
-			barGap: '-100%',
-			data: [] as number[],
-			itemStyle: {
-				color: computed(() => (isDark.value ? '#f1f1f911' : '#f1f1f9'))
-			},
-			zlevel: -1
 		}
 	]
-});
-
-function refresh() {
-	chartOption.xAxis.data = range(12).map((_, i) => t('{i}月', { i: i + 1 }));
-	chartOption.series[0].data = range(12).map(() => parseInt(String(Math.random() * 10000)));
-	chartOption.series[1].data = range(12).map(() => 10000);
-}
-
-function onChange() {
-	refresh();
-}
-
-onMounted(() => {
-	refresh();
-});
+}));
 </script>
 
 <style lang="scss" scoped>

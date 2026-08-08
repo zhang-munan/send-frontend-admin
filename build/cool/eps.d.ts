@@ -2116,6 +2116,11 @@ declare namespace Eps {
 
 	interface BaseComm {
 		/**
+		 * 首页业务排行
+		 */
+		dashboardRanking(data?: any): Promise<any>;
+
+		/**
 		 * 修改个人信息
 		 */
 		personUpdate(data?: any): Promise<any>;
@@ -2124,6 +2129,11 @@ declare namespace Eps {
 		 * 文件上传模式
 		 */
 		uploadMode(data?: any): Promise<any>;
+
+		/**
+		 * 首页统计汇总
+		 */
+		dashboard(data?: any): Promise<any>;
 
 		/**
 		 * 权限与菜单
@@ -2154,8 +2164,10 @@ declare namespace Eps {
 		 * 权限标识
 		 */
 		permission: {
+			dashboardRanking: string;
 			personUpdate: string;
 			uploadMode: string;
+			dashboard: string;
 			permmenu: string;
 			program: string;
 			person: string;
@@ -2167,8 +2179,10 @@ declare namespace Eps {
 		 * 权限状态
 		 */
 		_permission: {
+			dashboardRanking: boolean;
 			personUpdate: boolean;
 			uploadMode: boolean;
+			dashboard: boolean;
 			permmenu: boolean;
 			program: boolean;
 			person: boolean;

@@ -1,5 +1,5 @@
 <template>
-	<div class="count-sales">
+	<div v-loading="loading" class="count-sales">
 		<div class="card">
 			<div class="card__header">
 				<span class="label">{{ $t('总用户数') }}</span>
@@ -9,18 +9,19 @@
 			<div class="card__container">
 				<cl-number :value="num" class="num" />
 
-				<div class="rise">
+				<div v-if="data.dayOverDayRate !== null" :class="data.dayOverDayRate >= 0 ? 'rise' : 'fall'">
 					<el-icon>
-						<top-right />
+						<top-right v-if="data.dayOverDayRate >= 0" />
+						<bottom-right v-else />
 					</el-icon>
 
-					<span>+12%</span>
+					<span>{{ data.dayOverDayRate > 0 ? '+' : '' }}{{ data.dayOverDayRate }}%</span>
 				</div>
 			</div>
 
 			<div class="card__footer">
 				<span class="mr-2">{{ $t('日增用户数') }}</span>
-				<span>69</span>
+				<span>{{ data.today }}</span>
 			</div>
 		</div>
 	</div>
@@ -28,14 +29,14 @@
 
 <script lang="ts" setup>
 import { BottomRight, TopRight } from '@element-plus/icons-vue';
-import { random } from 'lodash-es';
-import { onMounted, ref } from 'vue';
+import { computed } from 'vue';
 
-const num = ref(0);
+const props = defineProps<{
+	data: { total: number; today: number; yesterday: number; dayOverDayRate: number | null };
+	loading: boolean;
+}>();
 
-onMounted(() => {
-	num.value = random(100000);
-});
+const num = computed(() => props.data.total);
 </script>
 
 <style lang="scss" scoped>

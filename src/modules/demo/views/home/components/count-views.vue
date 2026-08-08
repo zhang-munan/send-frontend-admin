@@ -1,28 +1,35 @@
 <template>
-	<div class="count-views">
+	<div v-loading="loading" class="count-views">
 		<div class="card">
 			<div class="card__header">
-				<span class="label">{{ $t('浏览量') }}</span>
+				<span class="label">{{ $t('累计短信量') }}</span>
 				<cl-svg name="trend" class="icon" />
 			</div>
 
 			<div class="card__container">
+				<cl-number :value="data.total" class="num" suffix="条" />
 				<v-chart :option="chartOption" autoresize />
 			</div>
 
 			<div class="card__footer">
-				<span class="mr-2">{{ $t('访客数') }}</span>
-				<span>142</span>
+				<span>{{ $t('今日短信量') }} {{ data.today }}</span>
+				<span>{{ $t('送达率') }} {{ delivery.rate }}%</span>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script lang="ts" setup>
-import { onMounted, reactive, ref } from 'vue';
-import { random, range } from 'lodash-es';
+import { computed } from 'vue';
+import type { HourlyMessageStat } from '../dashboard';
 
-const chartOption = reactive({
+const props = defineProps<{
+	data: { total: number; today: number; hourly: HourlyMessageStat[] };
+	delivery: { delivered: number; failed: number; rate: number };
+	loading: boolean;
+}>();
+
+const chartOption = computed(() => ({
 	grid: {
 		left: 0,
 		top: 1,
@@ -35,20 +42,7 @@ const chartOption = reactive({
 		axisLine: {
 			show: false
 		},
-		data: [
-			'00:00',
-			'2:00',
-			'4:00',
-			'6:00',
-			'8:00',
-			'10:00',
-			'12:00',
-			'14:00',
-			'16:00',
-			'18:00',
-			'20:00',
-			'22:00'
-		]
+		data: props.data.hourly.map(item => `${String(item.hour).padStart(2, '0')}:00`)
 	},
 	yAxis: {
 		type: 'value',
@@ -72,7 +66,7 @@ const chartOption = reactive({
 			showSymbol: false,
 			symbol: 'circle',
 			symbolSize: 6,
-			data: range(12).map(() => parseInt((Math.random() * 1000).toFixed(0)) + 500),
+			data: props.data.hourly.map(item => item.count),
 			itemStyle: {
 				color: '#4165d7'
 			},
@@ -81,13 +75,7 @@ const chartOption = reactive({
 			}
 		}
 	]
-});
-
-const num = ref(0);
-
-onMounted(() => {
-	num.value = random(1000000);
-});
+}));
 </script>
 
 <style lang="scss" scoped>
@@ -99,11 +87,25 @@ onMounted(() => {
 		}
 
 		&__container {
-			padding: 0;
+			position: relative;
+			padding: 0 20px;
+
+			.num {
+				position: relative;
+				z-index: 2;
+				font-size: 32px;
+			}
+
+			.echarts {
+				position: absolute;
+				inset: 0;
+				opacity: 0.45;
+			}
 		}
 
 		&__footer {
 			border-top: 0;
+			justify-content: space-between;
 		}
 	}
 }

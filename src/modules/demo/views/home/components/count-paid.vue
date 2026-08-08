@@ -1,8 +1,8 @@
 <template>
-	<div class="count-paid">
+	<div v-loading="loading" class="count-paid">
 		<div class="card">
 			<div class="card__header">
-				<span class="label">{{ $t('付款笔数') }}</span>
+				<span class="label">{{ $t('付费订单') }}</span>
 				<cl-svg name="order" class="icon" />
 			</div>
 
@@ -11,20 +11,20 @@
 			</div>
 
 			<div class="card__footer">
-				<span class="mr-2">{{ $t('转化率') }}</span>
-				<span>60%</span>
+				<span class="mr-2">{{ $t('今日付费订单') }}</span>
+				<span>{{ data.todayPaidCount }}</span>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script lang="ts" setup>
-import { random } from 'lodash-es';
-import { onMounted, ref } from 'vue';
+import { computed } from 'vue';
 
-const num = ref(0);
+const props = defineProps<{
+	data: { paidCount: number; todayPaidCount: number };
+	loading: boolean;
+}>();
 
-onMounted(() => {
-	num.value = random(10000);
-});
+const num = computed(() => props.data.paidCount);
 </script>

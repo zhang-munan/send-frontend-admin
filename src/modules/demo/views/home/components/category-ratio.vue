@@ -1,7 +1,7 @@
 <template>
-	<div class="card">
+	<div v-loading="loading" class="card">
 		<div class="card__header">
-			<span class="label">{{ $t('类别占比') }}</span>
+			<span class="label">{{ $t('消息状态分布') }}</span>
 		</div>
 
 		<div class="card__container">
@@ -12,17 +12,23 @@
 
 <script lang="ts" setup>
 import { useDark } from '@vueuse/core';
-import { computed, reactive } from 'vue';
+import { computed } from 'vue';
+import type { MessageStatusStat } from '../dashboard';
+
+const props = defineProps<{
+	data: MessageStatusStat[];
+	loading: boolean;
+}>();
 
 const isDark = useDark();
 
 const textColor = computed(() => (isDark.value ? '#f1f1f9' : '#000'));
 
-const chartOption = reactive({
+const chartOption = computed(() => ({
 	legend: {
 		top: 'bottom',
 		textStyle: {
-			color: textColor
+			color: textColor.value
 		}
 	},
 	grid: {
@@ -42,18 +48,20 @@ const chartOption = reactive({
 				borderRadius: 6
 			},
 			label: {
-				color: textColor
+				color: textColor.value
 			},
-			data: [
-				{ value: 387, name: '电子产品' },
-				{ value: 314, name: '服装' },
-				{ value: 253, name: '家居用品' },
-				{ value: 198, name: '书籍' },
-				{ value: 123, name: '其他' }
-			]
+			data: props.data.map(item => ({ value: item.count, name: item.name }))
 		}
-	]
-});
+	],
+	graphic: props.data.length
+		? undefined
+		: {
+			type: 'text',
+			left: 'center',
+			top: 'middle',
+			style: { text: '暂无消息数据', fill: textColor.value }
+		}
+}));
 </script>
 
 <style lang="scss" scoped>

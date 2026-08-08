@@ -1,179 +1,75 @@
 <template>
 	<div class="card">
 		<div class="card__header">
-			<span class="label">{{ $t('热门商品排行') }}</span>
+			<span class="label">{{ $t('业务排行') }}</span>
 
-			<cl-select-button v-model="type" :options="options.type" small />
+			<cl-select-button v-model="range" :options="options" small @change="load" />
 		</div>
 
-		<div class="card__container">
-			<cl-crud ref="Crud" padding="0">
-				<cl-table ref="Table" />
-			</cl-crud>
+		<div v-loading="loading" class="card__container">
+			<el-table :data="list" height="406" empty-text="该时间范围内暂无已支付订单">
+				<el-table-column type="index" :label="$t('排名')" width="70" />
+				<el-table-column prop="name" :label="$t('业务名称')" min-width="180" show-overflow-tooltip />
+				<el-table-column prop="revenue" :label="$t('实收金额')" min-width="120" align="right">
+					<template #default="{ row }">¥{{ formatYuan(row.revenue) }}</template>
+				</el-table-column>
+				<el-table-column prop="orderCount" :label="$t('已支付订单')" min-width="120" align="right" sortable />
+				<el-table-column prop="latestPayTime" :label="$t('最近支付时间')" min-width="170" />
+			</el-table>
 		</div>
 	</div>
 </template>
 
 <script lang="ts" setup>
-import { useCrud, useTable } from '@cool-vue/crud';
-import { reactive, ref } from 'vue';
+import { ElMessage } from 'element-plus';
+import { onActivated, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { formatYuan } from '/$/order/utils/money';
+import {
+	getDashboardRanking,
+	type DashboardRange,
+	type DashboardRankingItem
+} from '../dashboard';
 
 const { t } = useI18n();
+const range = ref<DashboardRange>('day');
+const list = ref<DashboardRankingItem[]>([]);
+const loading = ref(false);
+const loaded = ref(false);
 
-// 类型
-const type = ref('day');
+const options = [
+	{ label: t('今日'), value: 'day' },
+	{ label: t('本周'), value: 'week' },
+	{ label: t('本月'), value: 'month' },
+	{ label: t('全年'), value: 'year' }
+];
 
-// 选项
-const options = reactive({
-	type: [
-		{
-			label: t('今日'),
-			value: 'day'
-		},
-		{
-			label: t('本周'),
-			value: 'week'
-		},
-		{
-			label: t('本月'),
-			value: 'month'
-		},
-		{
-			label: t('全年'),
-			value: 'year'
-		}
-	]
-});
-
-const Crud = useCrud(
-	{
-		service: {
-			page() {
-				return Promise.resolve({
-					list: [
-						{
-							keyWord: '无线耳机',
-							count: 983,
-							ud: 5,
-							launchDate: '2023-01-01',
-							price: 299
-						},
-						{
-							keyWord: '运动耳机',
-							count: 763,
-							ud: -3,
-							launchDate: '2023-02-15',
-							price: 199
-						},
-						{
-							keyWord: '蓝牙音箱',
-							count: 328,
-							ud: 7,
-							launchDate: '2023-03-10',
-							price: 399
-						},
-						{
-							keyWord: '4k显示屏',
-							count: 144,
-							ud: 4,
-							launchDate: '2023-04-05',
-							price: 999
-						},
-						{
-							keyWord: '罗技 G530',
-							count: 121,
-							ud: -1,
-							launchDate: '2023-05-20',
-							price: 499
-						},
-						{
-							keyWord: '智能手表',
-							count: 450,
-							ud: 2,
-							launchDate: '2023-06-15',
-							price: 599
-						},
-						{
-							keyWord: '游戏鼠标',
-							count: 300,
-							ud: 6,
-							launchDate: '2023-07-01',
-							price: 150
-						},
-						{
-							keyWord: '机械键盘',
-							count: 200,
-							ud: -2,
-							launchDate: '2023-08-10',
-							price: 350
-						},
-						{
-							keyWord: 'VR眼镜',
-							count: 150,
-							ud: 8,
-							launchDate: '2023-09-05',
-							price: 799
-						},
-						{
-							keyWord: '智能音箱',
-							count: 100,
-							ud: 3,
-							launchDate: '2023-10-01',
-							price: 250
-						}
-					]
-				});
-			}
-		}
-	},
-	app => {
-		app.refresh();
+async function load() {
+	if (loading.value) return;
+	loading.value = true;
+	try {
+		const result = await getDashboardRanking(range.value);
+		list.value = result.list;
+		loaded.value = true;
+	} catch (error: any) {
+		ElMessage.error(error?.message || '业务排行加载失败');
+	} finally {
+		loading.value = false;
 	}
-);
+}
 
-const Table = useTable({
-	autoHeight: false,
-	contextMenu: ['order-asc', 'order-desc'],
-	columns: [
-		{
-			label: t('排名'),
-			type: 'index',
-			width: 60
-		},
-		{
-			label: t('商品名称'),
-			prop: 'keyWord',
-			minWidth: 120
-		},
-		{
-			label: t('商品金额'),
-			prop: 'price',
-			minWidth: 100
-		},
-		{
-			label: t('下单次数'),
-			prop: 'count',
-			minWidth: 100,
-			sortable: true
-		},
-		{
-			label: t('日涨幅'),
-			prop: 'ud',
-			sortable: true,
-			minWidth: 100
-		},
-		{
-			label: t('上架时间'),
-			prop: 'launchDate',
-			minWidth: 120
-		}
-	]
+onMounted(load);
+onActivated(() => {
+	if (loaded.value) load();
 });
 </script>
 
 <style lang="scss" scoped>
 .card {
 	padding-bottom: 20px;
+
+	&__container {
+		min-height: 406px;
+	}
 }
 </style>
