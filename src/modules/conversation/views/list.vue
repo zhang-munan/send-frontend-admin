@@ -60,8 +60,8 @@ const Upsert = useUpsert({
 			required: true,
 		},
 		{
-			label: t("收件人手机号哈希"),
-			prop: "receiverPhoneHash",
+			label: t("收件人手机号"),
+			prop: "receiverPhone",
 			component: { name: "el-input", props: { clearable: true } },
 			span: 12,
 			required: true,
@@ -145,9 +145,9 @@ const Table = useTable({
 		{ type: "selection" },
 		{ label: t("昵称"), prop: "userName", minWidth: 140, showOverflowTooltip: true },
 		{
-			label: t("收件人手机号哈希"),
-			prop: "receiverPhoneHash",
-			minWidth: 280,
+			label: t("收件人手机号"),
+			prop: "receiverPhone",
+			minWidth: 150,
 			showOverflowTooltip: true,
 		},
 		{

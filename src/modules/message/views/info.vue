@@ -89,7 +89,7 @@ const Upsert = useUpsert({
 			span: 12,
 		},
 		{
-			label: t("收件人手机号（后续加密）"),
+			label: t("收件人手机号"),
 			prop: "receiverPhone",
 			component: { name: "el-input", props: { clearable: true } },
 			span: 12,
@@ -98,13 +98,6 @@ const Upsert = useUpsert({
 		{
 			label: t("收件人脱敏号码"),
 			prop: "receiverPhoneMask",
-			component: { name: "el-input", props: { clearable: true } },
-			span: 12,
-			required: true,
-		},
-		{
-			label: t("收件人手机号哈希"),
-			prop: "receiverPhoneHash",
 			component: { name: "el-input", props: { clearable: true } },
 			span: 12,
 			required: true,
@@ -254,18 +247,13 @@ const Table = useTable({
 		{ label: t("使用的模板ID"), prop: "templateId", minWidth: 120 },
 		{ label: t("所属对话ID"), prop: "conversationId", minWidth: 120 },
 		{
-			label: t("收件人手机号（后续加密）"),
+			label: t("收件人手机号"),
 			prop: "receiverPhone",
 			minWidth: 120,
 		},
 		{
 			label: t("收件人脱敏号码"),
 			prop: "receiverPhoneMask",
-			minWidth: 120,
-		},
-		{
-			label: t("收件人手机号哈希"),
-			prop: "receiverPhoneHash",
 			minWidth: 120,
 		},
 		{ label: t("消息内容"), prop: "content", minWidth: 120 },
