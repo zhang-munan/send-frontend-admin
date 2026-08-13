@@ -18,11 +18,7 @@
 		</cl-row>
 
 		<!-- 新增/编辑 -->
-		<cl-upsert ref="Upsert">
-			<template #slot-content="{ scope }">
-				<rich-editor v-model="scope.content" style="min-height: 360px" />
-			</template>
-		</cl-upsert>
+		<cl-upsert ref="Upsert" />
 	</cl-crud>
 </template>
 
@@ -94,18 +90,26 @@ const Upsert = useUpsert({
 			label: '文档内容',
 			required: true,
 			span: 24,
-			component: { name: 'cl-editor-quill', props: { height: 400 } }
+			component: {
+				name: 'cl-editor',
+				props: {
+					name: 'cl-editor-wang',
+					height: 400
+				}
+			}
 		},
 		{
 			prop: 'status',
 			label: '状态',
 			value: 1,
 			component: {
-				name: 'el-radio-group',
-				options: [
-					{ label: '启用', value: 1 },
-					{ label: '禁用', value: 0 }
-				]
+				name: 'el-switch',
+				props: {
+					activeValue: 1,
+					inactiveValue: 0,
+					activeText: '启用',
+					inactiveText: '禁用'
+				}
 			}
 		}
 	]

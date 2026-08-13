@@ -60,14 +60,29 @@ const Upsert = useUpsert({
 		{
 			label: t("文档内容（富文本HTML）"),
 			prop: "content",
-			component: { name: "el-input", props: { clearable: true } },
-			span: 12,
+			component: {
+				name: "cl-editor",
+				props: {
+					name: "cl-editor-wang",
+					height: 400,
+				},
+			},
+			span: 24,
 			required: true,
 		},
 		{
 			label: t("状态"),
 			prop: "status",
-			component: { name: "el-input", props: { clearable: true } },
+			component: {
+				name: "el-switch",
+				props: {
+					activeValue: 1,
+					inactiveValue: 0,
+					activeText: t("启用"),
+					inactiveText: t("禁用"),
+				},
+			},
+			value: 1,
 			span: 12,
 			required: true,
 		},
@@ -80,8 +95,15 @@ const Table = useTable({
 		{ type: "selection" },
 		{ label: t("文档标识：user_agreement"), prop: "docKey", minWidth: 120 },
 		{ label: t("文档标题"), prop: "title", minWidth: 120 },
-		{ label: t("文档内容（富文本HTML）"), prop: "content", minWidth: 120 },
-		{ label: t("状态"), prop: "status", minWidth: 120 },
+		{
+			label: t("状态"),
+			prop: "status",
+			minWidth: 120,
+			dict: [
+				{ label: t("禁用"), value: 0, type: "danger" },
+				{ label: t("启用"), value: 1, type: "success" },
+			],
+		},
 		{
 			label: t("创建时间"),
 			prop: "createTime",
