@@ -9,7 +9,8 @@
 				<p>处理标准流程无法覆盖的特殊情况，所有操作都会留下完整审计记录。</p>
 			</div>
 			<div class="hero-status">
-				<span class="pulse"></span> 系统运行正常 <small>刚刚更新</small>
+				<span class="pulse"></span> 系统运行正常
+				<small>{{ summary.updatedAt || '正在加载' }}</small>
 			</div>
 		</section>
 
@@ -82,13 +83,25 @@
 					<h2>最近操作</h2>
 					<el-button link type="primary" @click="showLog = true">全部记录</el-button>
 				</div>
-				<div v-for="log in logs" :key="log.id" class="log">
+				<el-empty
+					v-if="!logs.length && !loading"
+					description="暂无操作记录"
+					:image-size="70"
+				/>
+				<div v-for="log in recentLogs" :key="log.id" class="log">
 					<span class="log-dot" :class="log.color"></span>
 					<div>
-						<b>{{ log.title }}</b>
-						<p>{{ log.operator }} · {{ log.time }}</p>
+						<b
+							>{{ log.actionName
+							}}<template v-if="log.targetOrderNo">
+								· {{ log.targetOrderNo }}</template
+							></b
+						>
+						<p>{{ auditDescription(log) }} · {{ log.createTime }}</p>
 					</div>
-					<el-tag size="small" :type="log.type" effect="plain">{{ log.status }}</el-tag>
+					<el-tag size="small" :type="log.type" effect="plain">{{
+						auditStatusName(log.status)
+					}}</el-tag>
 				</div>
 			</div>
 			<div class="panel safety">
@@ -120,23 +133,109 @@
 					type="warning"
 					:closable="false"
 					show-icon
-				/><el-form label-position="top" class="control-form"
-					><el-form-item label="目标用户"
-						><el-input
-							v-model="form.user"
+				/><el-form label-position="top" class="control-form">
+					<el-form-item label="目标用户">
+						<el-select
+							v-model="form.userId"
+							filterable
+							remote
+							clearable
+							:remote-method="searchUsers"
+							:loading="userLoading"
 							placeholder="输入用户 ID、手机号或昵称"
-							clearable /></el-form-item
-					><el-form-item v-if="active.key === 'refund'" label="指定订单"
-						><el-select
-							v-model="form.order"
-							placeholder="选择需要处理的订单"
+							style="width: 100%"
+							@change="onUserChange"
+						>
+							<el-option
+								v-for="user in users"
+								:key="user.id"
+								:value="Number(user.id)"
+								:label="userLabel(user)"
+							/>
+						</el-select>
+					</el-form-item>
+					<div v-if="selectedUser" class="data-preview">
+						<span
+							>当前余额 <b>¥{{ centsToYuan(selectedUser.balance) }}</b></span
+						><span
+							>剩余次数 <b>{{ selectedUser.messageQuota }}</b></span
+						>
+					</div>
+					<el-form-item
+						v-if="active.key === 'refund' || active.key === 'order'"
+						label="指定订单"
+					>
+						<el-select
+							v-model="form.orderId"
+							filterable
+							remote
+							clearable
+							:remote-method="searchOrders"
+							:loading="orderLoading"
+							:disabled="!form.userId"
+							placeholder="输入订单号或商品名称"
+							style="width: 100%"
+							@change="onOrderChange"
+						>
+							<el-option
+								v-for="order in orders"
+								:key="order.id"
+								:value="Number(order.id)"
+								:label="orderLabel(order)"
+							/>
+						</el-select>
+					</el-form-item>
+					<div v-if="selectedOrder" class="order-preview">
+						<div>
+							<span>订单号</span><b>{{ selectedOrder.orderNo }}</b>
+						</div>
+						<div>
+							<span>实付金额</span><b>¥{{ centsToYuan(selectedOrder.payAmount) }}</b>
+						</div>
+						<div>
+							<span>订单状态</span><b>{{ orderStatusName(selectedOrder.status) }}</b>
+						</div>
+						<div>
+							<span>退款状态</span
+							><b>{{ refundStatusName(selectedOrder.refundStatus) }}</b>
+						</div>
+					</div>
+					<el-form-item v-if="active.key === 'order'" label="目标订单状态">
+						<el-select
+							v-model="form.targetStatus"
+							placeholder="选择目标状态"
 							style="width: 100%"
 							><el-option
-								v-for="o in orders"
-								:key="o.id"
-								:label="`${o.id} · ${o.name} · ¥${o.amount}`"
-								:value="o.id" /></el-select></el-form-item
-					><el-form-item label="操作原因"
+								v-for="item in orderStatuses"
+								:key="item.value"
+								:label="item.label"
+								:value="item.value"
+						/></el-select>
+					</el-form-item>
+					<template v-if="active.key === 'user'">
+						<el-form-item label="账户余额调整（元）"
+							><el-input-number
+								v-model="form.balanceDeltaYuan"
+								:precision="2"
+								:step="1"
+								:min="-1000000"
+								:max="1000000"
+								style="width: 100%"
+							/>
+							<div class="form-hint">正数增加，负数扣减</div></el-form-item
+						>
+						<el-form-item label="消息次数调整（次）"
+							><el-input-number
+								v-model="form.quotaDelta"
+								:step="1"
+								:min="-1000000"
+								:max="1000000"
+								style="width: 100%"
+							/>
+							<div class="form-hint">正数增加，负数扣减</div></el-form-item
+						>
+					</template>
+					<el-form-item label="操作原因"
 						><el-input
 							v-model="form.reason"
 							type="textarea"
@@ -149,27 +248,37 @@
 					size="large"
 					class="submit"
 					:disabled="!canSubmit"
+					:loading="submitting"
 					@click="confirmAction"
 					>继续操作 <el-icon><ArrowRight /></el-icon
 				></el-button>
 			</div>
 		</el-drawer>
-		<el-dialog v-model="showLog" title="审计日志" width="640px"
-			><div v-for="log in logs" :key="log.id" class="log dialog-log">
+		<el-dialog v-model="showLog" title="审计日志" width="720px" @open="loadAudits"
+			><el-empty v-if="!logs.length" description="暂无审计日志" />
+			<div v-for="log in logs" :key="log.id" class="log dialog-log">
 				<span class="log-dot" :class="log.color"></span>
 				<div>
-					<b>{{ log.title }}</b>
-					<p>{{ log.operator }} · {{ log.time }}</p>
+					<b
+						>{{ log.actionName
+						}}<template v-if="log.targetOrderNo">
+							· {{ log.targetOrderNo }}</template
+						></b
+					>
+					<p>{{ auditDescription(log) }} · {{ log.createTime }}</p>
 				</div>
-				<el-tag size="small" :type="log.type" effect="plain">{{ log.status }}</el-tag>
+				<el-tag size="small" :type="log.type" effect="plain">{{
+					auditStatusName(log.status)
+				}}</el-tag>
 			</div>
 		</el-dialog>
 	</div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, onMounted, reactive, ref } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
+import { useCool } from '/@/cool';
 import {
 	ArrowRight,
 	CreditCard,
@@ -178,29 +287,49 @@ import {
 	Lock,
 	Plus,
 	Refresh,
-	Setting,
 	User,
 	WarningFilled
 } from '@element-plus/icons-vue';
 
-const stats = [
+const { service } = useCool();
+const api = (service as any).control.workspace;
+const summary = reactive({
+	pendingSpecialItems: 0,
+	monthOperationCount: 0,
+	affectedUserCount: 0,
+	safetyScore: 100,
+	updatedAt: ''
+});
+const stats = computed(() => [
 	{
 		label: '待处理特殊事项',
-		value: '12',
-		hint: '较昨日 -3',
+		value: summary.pendingSpecialItems,
+		hint: '待审批、处理中与失败',
 		icon: WarningFilled,
 		color: 'orange'
 	},
 	{
 		label: '本月已执行操作',
-		value: '186',
+		value: summary.monthOperationCount,
 		hint: '全部已留痕',
 		icon: DocumentChecked,
 		color: 'blue'
 	},
-	{ label: '影响用户数', value: '1,284', hint: '近 30 天', icon: User, color: 'purple' },
-	{ label: '系统安全评分', value: '98', hint: '风险可控', icon: Lock, color: 'green' }
-];
+	{
+		label: '影响用户数',
+		value: summary.affectedUserCount,
+		hint: '近 30 天',
+		icon: User,
+		color: 'purple'
+	},
+	{
+		label: '系统安全评分',
+		value: summary.safetyScore,
+		hint: '近 30 天操作成功率',
+		icon: Lock,
+		color: 'green'
+	}
+]);
 const capabilities = [
 	{
 		key: 'refund',
@@ -215,7 +344,7 @@ const capabilities = [
 	{
 		key: 'order',
 		title: '订单状态修复',
-		description: '修正异常订单状态、补发权益或重新触发支付结果同步。',
+		description: '在保留真实支付与退款事实的前提下，修正异常订单状态。',
 		action: '处理异常订单',
 		icon: Refresh,
 		color: 'blue',
@@ -224,92 +353,178 @@ const capabilities = [
 	{
 		key: 'user',
 		title: '用户权益调整',
-		description: '增减会员、次数与账户余额，处理客诉补偿和数据校正。',
+		description: '增减消息次数与账户余额，处理客诉补偿和数据校正。',
 		action: '调整用户权益',
 		icon: User,
 		color: 'purple',
 		risk: '高风险'
-	},
-	{
-		key: 'content',
-		title: '内容安全处置',
-		description: '下架违规内容、解除误判限制或恢复被隐藏的内容。',
-		action: '进入内容处置',
-		icon: Setting,
-		color: 'orange',
-		risk: '中风险'
-	},
-	{
-		key: 'data',
-		title: '数据修复工具',
-		description: '处理孤儿数据、重新生成业务记录或执行定向数据修复。',
-		action: '选择修复任务',
-		icon: DocumentChecked,
-		color: 'green',
-		risk: '高风险'
 	}
 ];
-const orders = [
-	{ id: 'ORD-20260812-0192', name: '暖心告白套餐', amount: '29.90' },
-	{ id: 'ORD-20260808-0088', name: '会员月卡', amount: '18.00' }
-];
-const logs = ref([
-	{
-		id: 1,
-		title: '强制退款 · ORD-20260811-0186',
-		operator: '管理员 张**, 用户 U10086',
-		time: '今天 14:32',
-		status: '已完成',
-		type: 'success',
-		color: 'green'
-	},
-	{
-		id: 2,
-		title: '用户权益调整 · 增加 10 次生成额度',
-		operator: '管理员 张**, 用户 U10021',
-		time: '今天 11:08',
-		status: '已完成',
-		type: 'success',
-		color: 'blue'
-	},
-	{
-		id: 3,
-		title: '内容安全处置 · 恢复内容 C20881',
-		operator: '管理员 李**, 用户 U10009',
-		time: '昨天 18:45',
-		status: '已完成',
-		type: 'info',
-		color: 'purple'
-	}
-]);
+const users = ref<any[]>([]),
+	orders = ref<any[]>([]),
+	logs = ref<any[]>([]);
+const loading = ref(false),
+	userLoading = ref(false),
+	orderLoading = ref(false),
+	submitting = ref(false);
 const drawer = ref(false),
 	showLog = ref(false),
 	active = ref<any>(null),
-	form = ref({ user: '', order: '', reason: '' });
-const canSubmit = computed(
-	() =>
-		form.value.user &&
-		form.value.reason.length >= 10 &&
-		(active.value?.key !== 'refund' || form.value.order)
+	form = ref<any>({
+		userId: undefined,
+		orderId: undefined,
+		targetStatus: undefined,
+		balanceDeltaYuan: 0,
+		quotaDelta: 0,
+		reason: ''
+	});
+const orderStatuses = [
+	{ label: '待支付', value: 0 },
+	{ label: '已支付', value: 1 },
+	{ label: '已退款', value: 2 },
+	{ label: '已关闭', value: 3 }
+];
+const recentLogs = computed(() => logs.value.slice(0, 5));
+const selectedUser = computed(() =>
+	users.value.find(item => Number(item.id) === Number(form.value.userId))
 );
+const selectedOrder = computed(() =>
+	orders.value.find(item => Number(item.id) === Number(form.value.orderId))
+);
+const canSubmit = computed(() => {
+	if (!form.value.userId || form.value.reason.trim().length < 10) return false;
+	if (active.value?.key === 'refund') return Boolean(form.value.orderId);
+	if (active.value?.key === 'order')
+		return form.value.orderId && form.value.targetStatus !== undefined;
+	if (active.value?.key === 'user')
+		return Number(form.value.balanceDeltaYuan) !== 0 || Number(form.value.quotaDelta) !== 0;
+	return false;
+});
 function openCapability(item: any) {
 	active.value = item;
-	form.value = { user: '', order: '', reason: '' };
+	form.value = {
+		userId: undefined,
+		orderId: undefined,
+		targetStatus: undefined,
+		balanceDeltaYuan: 0,
+		quotaDelta: 0,
+		reason: ''
+	};
+	users.value = [];
+	orders.value = [];
 	drawer.value = true;
+}
+async function searchUsers(keyword: string) {
+	if (!keyword?.trim()) return;
+	userLoading.value = true;
+	try {
+		users.value = await api.searchUsers({ keyword });
+	} finally {
+		userLoading.value = false;
+	}
+}
+async function onUserChange() {
+	form.value.orderId = undefined;
+	orders.value = [];
+	if (form.value.userId && active.value?.key !== 'user') await searchOrders('');
+}
+async function searchOrders(keyword: string) {
+	if (!form.value.userId) return;
+	orderLoading.value = true;
+	try {
+		orders.value = await api.searchOrders({
+			keyword,
+			userId: form.value.userId,
+			mode: active.value?.key === 'refund' ? 'refund' : 'all'
+		});
+	} finally {
+		orderLoading.value = false;
+	}
+}
+function onOrderChange() {
+	if (active.value?.key === 'order') form.value.targetStatus = undefined;
 }
 async function confirmAction() {
 	try {
 		await ElMessageBox.confirm(
-			`确认对「${form.value.user}」执行${active.value.title}？此操作将被记录且可能无法撤销。`,
+			`确认对「${selectedUser.value?.nickName || selectedUser.value?.phone || form.value.userId}」执行${active.value.title}？此操作将被记录且可能无法撤销。`,
 			'最后确认',
 			{ type: 'warning', confirmButtonText: '确认执行', cancelButtonText: '返回检查' }
 		);
+		submitting.value = true;
+		const common = { userId: form.value.userId, reason: form.value.reason.trim() };
+		if (active.value.key === 'refund')
+			await api.forceRefund({ ...common, orderId: form.value.orderId });
+		if (active.value.key === 'order')
+			await api.repairOrderStatus({
+				...common,
+				orderId: form.value.orderId,
+				targetStatus: form.value.targetStatus
+			});
+		if (active.value.key === 'user')
+			await api.adjustUserBenefit({
+				...common,
+				balanceDelta: Math.round(Number(form.value.balanceDeltaYuan) * 100),
+				quotaDelta: Number(form.value.quotaDelta)
+			});
 		drawer.value = false;
-		ElMessage.success('操作已提交，审计记录已生成');
-	} catch {
-		/* 用户取消 */
+		ElMessage.success('操作完成，审计记录已生成');
+		await loadDashboard();
+	} catch (error: any) {
+		if (error !== 'cancel' && error !== 'close') ElMessage.error(error?.message || '操作失败');
+	} finally {
+		submitting.value = false;
 	}
 }
+async function loadSummary() {
+	Object.assign(summary, await api.summary());
+}
+async function loadAudits() {
+	const result = await api.auditList({ page: 1, size: 50 });
+	logs.value = (result.list || []).map((item: any) => ({
+		...item,
+		status: Number(item.status),
+		type:
+			Number(item.status) === 1
+				? 'success'
+				: Number(item.status) === 2
+					? 'danger'
+					: 'warning',
+		color: Number(item.status) === 1 ? 'green' : Number(item.status) === 2 ? 'red' : 'orange'
+	}));
+}
+async function loadDashboard() {
+	loading.value = true;
+	try {
+		await Promise.all([loadSummary(), loadAudits()]);
+	} catch (error: any) {
+		ElMessage.error(error?.message || '总控制台数据加载失败');
+	} finally {
+		loading.value = false;
+	}
+}
+function userLabel(user: any) {
+	return `${user.nickName || '未设置昵称'} · ${user.phone || '无手机号'} · ID ${user.id}`;
+}
+function orderLabel(order: any) {
+	return `${order.orderNo} · ${order.productName || '未命名订单'} · ¥${centsToYuan(order.payAmount)}`;
+}
+function centsToYuan(value: any) {
+	return (Number(value || 0) / 100).toFixed(2);
+}
+function orderStatusName(value: any) {
+	return orderStatuses.find(item => item.value === Number(value))?.label || '未知';
+}
+function refundStatusName(value: any) {
+	return ['未申请', '待审批', '已退款', '已拒绝', '处理中', '失败'][Number(value)] || '未知';
+}
+function auditStatusName(value: any) {
+	return ['处理中', '已完成', '失败'][Number(value)] || '未知';
+}
+function auditDescription(log: any) {
+	return `管理员 ${log.operatorName}，用户 ${log.targetUserName || log.targetUserPhone || log.targetUserId || '-'}`;
+}
+onMounted(loadDashboard);
 </script>
 
 <style scoped lang="scss">
@@ -605,6 +820,53 @@ async function confirmAction() {
 }
 .control-form {
 	margin-top: 24px;
+}
+.data-preview {
+	display: flex;
+	gap: 12px;
+	margin: -8px 0 18px;
+}
+.data-preview span {
+	flex: 1;
+	padding: 11px 12px;
+	border-radius: 8px;
+	background: #f5f8fc;
+	color: #7c899d;
+	font-size: 12px;
+}
+.data-preview b {
+	float: right;
+	color: #29354a;
+}
+.order-preview {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 1px;
+	margin: -8px 0 18px;
+	padding: 1px;
+	background: #e9edf4;
+	border-radius: 9px;
+	overflow: hidden;
+}
+.order-preview > div {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	padding: 10px 12px;
+	background: #f8fafd;
+}
+.order-preview span,
+.form-hint {
+	color: #929daf;
+	font-size: 12px;
+}
+.order-preview b {
+	font-size: 12px;
+	font-weight: 500;
+}
+.form-hint {
+	width: 100%;
+	margin-top: 5px;
 }
 .submit {
 	width: 100%;

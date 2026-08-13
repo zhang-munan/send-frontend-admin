@@ -1069,6 +1069,11 @@ declare namespace Eps {
 		refundNo?: string;
 
 		/**
+		 * 是否由总控制台强制退款：0否 1是
+		 */
+		isForceRefund?: number;
+
+		/**
 		 * 客户端IP
 		 */
 		clientIp?: string;
@@ -4015,6 +4020,71 @@ declare namespace Eps {
 		request: Request;
 	}
 
+	interface ControlWorkspace {
+		/**
+		 * 超管修复订单状态
+		 */
+		repairOrderStatus(data?: any): Promise<any>;
+
+		/**
+		 * 超管调整用户权益
+		 */
+		adjustUserBenefit(data?: any): Promise<any>;
+
+		/**
+		 * 搜索真实订单
+		 */
+		searchOrders(data?: any): Promise<any>;
+
+		/**
+		 * 搜索真实用户及权益
+		 */
+		searchUsers(data?: any): Promise<any>;
+
+		/**
+		 * 超管强制退款
+		 */
+		forceRefund(data?: any): Promise<any>;
+
+		/**
+		 * 总控制台审计日志
+		 */
+		auditList(data?: any): Promise<any>;
+
+		/**
+		 * 总控制台统计
+		 */
+		summary(data?: any): Promise<any>;
+
+		/**
+		 * 权限标识
+		 */
+		permission: {
+			repairOrderStatus: string;
+			adjustUserBenefit: string;
+			searchOrders: string;
+			searchUsers: string;
+			forceRefund: string;
+			auditList: string;
+			summary: string;
+		};
+
+		/**
+		 * 权限状态
+		 */
+		_permission: {
+			repairOrderStatus: boolean;
+			adjustUserBenefit: boolean;
+			searchOrders: boolean;
+			searchUsers: boolean;
+			forceRefund: boolean;
+			auditList: boolean;
+			summary: boolean;
+		};
+
+		request: Request;
+	}
+
 	interface RequestOptions {
 		url: string;
 		method?: "OPTIONS" | "GET" | "HEAD" | "POST" | "PUT" | "DELETE" | "TRACE" | "CONNECT";
@@ -4063,5 +4133,6 @@ declare namespace Eps {
 		task: { info: TaskInfo };
 		template: { category: TemplateCategory; info: TemplateInfo };
 		user: { address: UserAddress; info: UserInfo };
+		control: { workspace: ControlWorkspace };
 	};
 }
