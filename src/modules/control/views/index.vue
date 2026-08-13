@@ -242,12 +242,23 @@
 							:rows="4"
 							placeholder="请填写业务依据，至少 10 个字"
 							maxlength="200"
-							show-word-limit /></el-form-item></el-form
+							show-word-limit
+						/>
+						<div
+							class="form-hint"
+							:class="{ invalid: reasonLength > 0 && reasonLength < 10 }"
+						>
+							{{
+								reasonLength < 10
+									? `还需填写 ${10 - reasonLength} 个字`
+									: '已满足原因字数要求'
+							}}
+						</div></el-form-item
+					></el-form
 				><el-button
 					type="primary"
 					size="large"
 					class="submit"
-					:disabled="!canSubmit"
 					:loading="submitting"
 					@click="confirmAction"
 					>继续操作 <el-icon><ArrowRight /></el-icon
@@ -391,15 +402,7 @@ const selectedUser = computed(() =>
 const selectedOrder = computed(() =>
 	orders.value.find(item => Number(item.id) === Number(form.value.orderId))
 );
-const canSubmit = computed(() => {
-	if (!form.value.userId || form.value.reason.trim().length < 10) return false;
-	if (active.value?.key === 'refund') return Boolean(form.value.orderId);
-	if (active.value?.key === 'order')
-		return form.value.orderId && form.value.targetStatus !== undefined;
-	if (active.value?.key === 'user')
-		return Number(form.value.balanceDeltaYuan) !== 0 || Number(form.value.quotaDelta) !== 0;
-	return false;
-});
+const reasonLength = computed(() => form.value.reason.trim().length);
 function openCapability(item: any) {
 	active.value = item;
 	form.value = {
@@ -445,6 +448,11 @@ function onOrderChange() {
 	if (active.value?.key === 'order') form.value.targetStatus = undefined;
 }
 async function confirmAction() {
+	const validationError = getValidationError();
+	if (validationError) {
+		ElMessage.warning(validationError);
+		return;
+	}
 	try {
 		await ElMessageBox.confirm(
 			`确认对「${selectedUser.value?.nickName || selectedUser.value?.phone || form.value.userId}」执行${active.value.title}？此操作将被记录且可能无法撤销。`,
@@ -475,6 +483,23 @@ async function confirmAction() {
 	} finally {
 		submitting.value = false;
 	}
+}
+function getValidationError() {
+	if (!form.value.userId) return '请先选择目标用户';
+	if (active.value?.key === 'refund' && !form.value.orderId) return '请选择需要退款的订单';
+	if (active.value?.key === 'order' && !form.value.orderId) return '请选择需要修复的订单';
+	if (active.value?.key === 'order' && form.value.targetStatus === undefined)
+		return '请选择目标订单状态';
+	if (
+		active.value?.key === 'user' &&
+		Number(form.value.balanceDeltaYuan) === 0 &&
+		Number(form.value.quotaDelta) === 0
+	)
+		return '账户余额和消息次数至少调整一项';
+	if (!reasonLength.value) return '请填写操作原因';
+	if (reasonLength.value < 10)
+		return `操作原因至少需要 10 个字，当前为 ${reasonLength.value} 个字`;
+	return '';
 }
 async function loadSummary() {
 	Object.assign(summary, await api.summary());
@@ -867,6 +892,9 @@ onMounted(loadDashboard);
 .form-hint {
 	width: 100%;
 	margin-top: 5px;
+}
+.form-hint.invalid {
+	color: var(--el-color-danger);
 }
 .submit {
 	width: 100%;
