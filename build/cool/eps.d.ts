@@ -1337,7 +1337,7 @@ declare namespace Eps {
 		id?: number;
 
 		/**
-		 * 文档标识：user_agreement | privacy_policy | usage_guide
+		 * 文档标识：user_agreement | privacy_policy | refund_rules | usage_guide
 		 */
 		docKey?: string;
 
@@ -1536,6 +1536,11 @@ declare namespace Eps {
 		 * 匿名发送默认开启
 		 */
 		defaultAnonymous?: number;
+
+		/**
+		 * 屏蔽所有业务短信
+		 */
+		blockAllSms?: number;
 
 		/**
 		 * 创建时间
