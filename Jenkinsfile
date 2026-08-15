@@ -47,7 +47,7 @@ pipeline {
                             docker build -t ${IMAGE_NAME}:${IMAGE_TAG} -f Dockerfile.production . &&
                             cd ${DEPLOY_DIR} &&
                             sed -i "s|^ADMIN_IMAGE=.*|ADMIN_IMAGE=${IMAGE_NAME}:${IMAGE_TAG}|" .env.production &&
-                            docker compose --env-file .env.production -f compose.yml up -d admin &&
+                            docker compose --env-file .env.production -f compose.yml up -d --no-deps admin &&
                             echo "✅ 构建部署完成: ${IMAGE_NAME}:${IMAGE_TAG}"
                         '
                     """
