@@ -17,6 +17,7 @@
 							:src="img"
 							:preview-src-list="getImages(scope.row)"
 							:initial-index="index"
+							preview-teleported
 							style="
 								width: 48px;
 								height: 48px;
@@ -186,10 +187,9 @@ async function submitReply() {
 	}
 	replyDialog.loading = true;
 	try {
-		await service.feedback.info.request({
-			url: '/admin/feedback/info/reply',
-			method: 'POST',
-			data: { id: replyDialog.row.id, reply: replyDialog.reply.trim() }
+		await service.feedback.info.reply({
+			id: replyDialog.row.id,
+			reply: replyDialog.reply.trim()
 		});
 		ElMessage.success('回复成功');
 		replyDialog.visible = false;
