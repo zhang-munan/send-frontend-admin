@@ -506,6 +506,11 @@ function getValidationError() {
 	if (active.value?.key === 'order' && form.value.targetStatus === undefined)
 		return '请选择目标订单状态';
 	if (
+		active.value?.key === 'order' &&
+		Number(form.value.targetStatus) === Number(selectedOrder.value?.status)
+	)
+		return '选择的状态与当前状态相同，请重新选择';
+	if (
 		active.value?.key === 'user' &&
 		Number(form.value.balanceDeltaYuan) === 0 &&
 		Number(form.value.quotaDelta) === 0
@@ -585,10 +590,26 @@ function auditActionDetail(log: any) {
 	}
 
 	if (log.actionType === 'order_status') {
-		return `订单状态 ${formatChange(
-			orderStatusName(before.status),
-			after.status === undefined ? '未变更' : orderStatusName(after.status)
-		)}`;
+		const changes: string[] = [];
+		const orderStatusChanged =
+			after.status !== undefined && Number(before.status) !== Number(after.status);
+		const refundStatusChanged =
+			after.refundStatus !== undefined &&
+			Number(before.refundStatus) !== Number(after.refundStatus);
+		if (orderStatusChanged) {
+			changes.push(
+				`订单状态 ${formatChange(orderStatusName(before.status), orderStatusName(after.status))}`
+			);
+		}
+		if (refundStatusChanged) {
+			changes.push(
+				`退款状态 ${formatChange(
+					refundStatusName(before.refundStatus),
+					refundStatusName(after.refundStatus)
+				)}`
+			);
+		}
+		return changes.join('；') || '订单及退款状态未发生变化';
 	}
 
 	if (log.actionType === 'user_benefit') {
