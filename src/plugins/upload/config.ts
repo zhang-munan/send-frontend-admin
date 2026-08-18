@@ -14,7 +14,7 @@ export default (): ModuleConfig => {
 				size: 100
 			},
 			// 云端上传路径前缀
-			prefixPath: 'app/base',
+			prefixPath: 'send/app/base',
 			// 规则
 			rules: [
 				{

@@ -1,7 +1,7 @@
 import { ElMessage } from 'element-plus';
 import { module, service } from '/@/cool';
 import { extname, filename, uuid } from '/@/cool/utils';
-import { pathJoin } from '../utils';
+import { pathJoin, withCloudFileRoot } from '../utils';
 import { useBase } from '/$/base';
 import { type AxiosProgressEvent } from 'axios';
 import { merge } from 'lodash-es';
@@ -36,7 +36,7 @@ export function useUpload() {
 					const name = filename(file.name) + '_' + fileId + '.' + ext;
 
 					// Key
-					let key = isLocal ? name : pathJoin(prefixPath!, name);
+					const key = isLocal ? name : withCloudFileRoot(pathJoin(prefixPath!, name));
 
 					// 多种上传请求
 					const next = async ({ host, preview, data }: Upload.Request) => {
@@ -89,14 +89,17 @@ export function useUpload() {
 									onProgress?.(100);
 								}
 
-								key = encodeURIComponent(key);
-
 								let url = '';
 
 								if (isLocal) {
 									url = res;
 								} else {
-									url = pathJoin(preview || host, key);
+									// 只编码每个路径段，保留目录分隔符，确保展示地址仍为 /send/...。
+									const previewKey = key
+										.split('/')
+										.map(encodeURIComponent)
+										.join('/');
+									url = pathJoin(preview || host, previewKey);
 								}
 
 								resolve({

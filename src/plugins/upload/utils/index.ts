@@ -72,3 +72,13 @@ export function pathJoin(...parts: string[]): string {
 		return normalizedParts.join('/');
 	}
 }
+
+const CLOUD_FILE_ROOT = 'send';
+
+/** 所有云端对象路径统一收口到 send 目录，避免重复添加前缀。 */
+export function withCloudFileRoot(path: string): string {
+	const normalized = path.replace(/(^\/+|\/+$)/g, '').replace(/\/+/g, '/');
+	return normalized == CLOUD_FILE_ROOT || normalized.startsWith(`${CLOUD_FILE_ROOT}/`)
+		? normalized
+		: pathJoin(CLOUD_FILE_ROOT, normalized);
+}

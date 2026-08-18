@@ -97,7 +97,8 @@
 								· {{ log.targetOrderNo }}</template
 							></b
 						>
-						<p>{{ auditDescription(log) }} · {{ log.createTime }}</p>
+						<p class="log-action">{{ auditActionDetail(log) }}</p>
+						<p class="log-meta">{{ auditDescription(log) }} · {{ log.createTime }}</p>
 					</div>
 					<el-tag size="small" :type="log.type" effect="plain">{{
 						auditStatusName(log.status)
@@ -265,18 +266,32 @@
 				></el-button>
 			</div>
 		</el-drawer>
-		<el-dialog v-model="showLog" title="审计日志" width="720px" @open="loadAudits"
+		<el-dialog v-model="showLog" title="审计日志" width="860px" @open="loadAudits"
 			><el-empty v-if="!logs.length" description="暂无审计日志" />
 			<div v-for="log in logs" :key="log.id" class="log dialog-log">
 				<span class="log-dot" :class="log.color"></span>
-				<div>
+				<div class="audit-log-body">
 					<b
 						>{{ log.actionName
 						}}<template v-if="log.targetOrderNo">
 							· {{ log.targetOrderNo }}</template
 						></b
 					>
-					<p>{{ auditDescription(log) }} · {{ log.createTime }}</p>
+					<div class="audit-detail">
+						<div>
+							<span>操作内容</span>
+							<p>{{ auditActionDetail(log) }}</p>
+						</div>
+						<div>
+							<span>操作原因</span>
+							<p>{{ log.reason || '-' }}</p>
+						</div>
+						<div v-if="log.errorMessage" class="audit-error">
+							<span>失败原因</span>
+							<p>{{ log.errorMessage }}</p>
+						</div>
+					</div>
+					<p class="log-meta">{{ auditDescription(log) }} · {{ log.createTime }}</p>
 				</div>
 				<el-tag size="small" :type="log.type" effect="plain">{{
 					auditStatusName(log.status)
@@ -508,6 +523,8 @@ async function loadAudits() {
 	const result = await api.auditList({ page: 1, size: 50 });
 	logs.value = (result.list || []).map((item: any) => ({
 		...item,
+		beforeData: normalizeAuditData(item.beforeData),
+		afterData: normalizeAuditData(item.afterData),
 		status: Number(item.status),
 		type:
 			Number(item.status) === 1
@@ -548,6 +565,72 @@ function auditStatusName(value: any) {
 }
 function auditDescription(log: any) {
 	return `管理员 ${log.operatorName}，用户 ${log.targetUserName || log.targetUserPhone || log.targetUserId || '-'}`;
+}
+function auditActionDetail(log: any) {
+	const before = log.beforeData || {};
+	const after = log.afterData || {};
+
+	if (log.actionType === 'force_refund') {
+		const amount = Number(after.refundAmount || before.payAmount || 0);
+		const afterStatus =
+			after.refundStatus === undefined
+				? Number(log.status) === 2
+					? '未变更'
+					: '处理中'
+				: refundStatusName(after.refundStatus);
+		return `整单强制退款 ¥${centsToYuan(amount)}，退款状态 ${formatChange(
+			refundStatusName(before.refundStatus),
+			afterStatus
+		)}`;
+	}
+
+	if (log.actionType === 'order_status') {
+		return `订单状态 ${formatChange(
+			orderStatusName(before.status),
+			after.status === undefined ? '未变更' : orderStatusName(after.status)
+		)}`;
+	}
+
+	if (log.actionType === 'user_benefit') {
+		if (after.balance === undefined && after.messageQuota === undefined) {
+			return '尝试调整用户权益，操作未完成且未产生数据变更';
+		}
+		const changes: string[] = [];
+		if (Number(before.balance) !== Number(after.balance)) {
+			changes.push(
+				`账户余额 ¥${centsToYuan(before.balance)} → ¥${centsToYuan(after.balance)}（${formatMoneyDelta(
+					Number(after.balance) - Number(before.balance)
+				)}）`
+			);
+		}
+		if (Number(before.messageQuota) !== Number(after.messageQuota)) {
+			changes.push(
+				`消息次数 ${Number(before.messageQuota || 0)} → ${Number(after.messageQuota || 0)}（${formatNumberDelta(
+					Number(after.messageQuota) - Number(before.messageQuota)
+				)}）`
+			);
+		}
+		return changes.join('；') || '用户权益数据未发生变化';
+	}
+
+	return log.actionName || '未知操作';
+}
+function normalizeAuditData(value: any) {
+	if (!value || typeof value !== 'string') return value;
+	try {
+		return JSON.parse(value);
+	} catch {
+		return {};
+	}
+}
+function formatChange(before: string, after: string) {
+	return `${before} → ${after}`;
+}
+function formatMoneyDelta(value: number) {
+	return `${value >= 0 ? '+' : '-'}¥${centsToYuan(Math.abs(value))}`;
+}
+function formatNumberDelta(value: number) {
+	return `${value >= 0 ? '+' : ''}${value}`;
 }
 onMounted(loadDashboard);
 </script>
@@ -791,6 +874,13 @@ onMounted(loadDashboard);
 	color: #9aa4b4;
 	margin: 5px 0 0;
 }
+.log .log-action {
+	color: #4c596d;
+	line-height: 1.55;
+}
+.log .log-meta {
+	color: #9aa4b4;
+}
 .log-dot {
 	width: 8px;
 	height: 8px;
@@ -901,7 +991,40 @@ onMounted(loadDashboard);
 	margin-top: 8px;
 }
 .dialog-log {
-	padding: 15px 4px;
+	align-items: flex-start;
+	padding: 18px 4px;
+}
+.dialog-log .log-dot {
+	margin-top: 5px;
+}
+.audit-log-body {
+	min-width: 0;
+}
+.audit-detail {
+	display: grid;
+	gap: 8px;
+	margin-top: 10px;
+	padding: 11px 13px;
+	border-radius: 8px;
+	background: #f7f9fc;
+}
+.audit-detail > div {
+	display: grid;
+	grid-template-columns: 64px minmax(0, 1fr);
+	gap: 10px;
+}
+.audit-detail span {
+	font-size: 12px;
+	color: #8994a6;
+}
+.audit-detail p {
+	margin: 0;
+	color: #364256;
+	line-height: 1.55;
+	word-break: break-word;
+}
+.audit-detail .audit-error p {
+	color: var(--el-color-danger);
 }
 @media (max-width: 1100px) {
 	.stats {
