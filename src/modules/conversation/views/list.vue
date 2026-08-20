@@ -37,10 +37,12 @@ import { useCrud, useTable, useUpsert, useSearch } from "@cool-vue/crud";
 import { useCool } from "/@/cool";
 import { useI18n } from "vue-i18n";
 import { reactive } from "vue";
+import { useRouter } from "vue-router";
 import UserSelect from "/$/user/components/user-select.vue";
 
 const { service } = useCool();
 const { t } = useI18n();
+const router = useRouter();
 
 // 选项
 const options = reactive({
@@ -201,6 +203,21 @@ const Table = useTable({
 			minWidth: 170,
 			sortable: "custom",
 			component: { name: "cl-date-text" },
+		},
+		{
+			type: "op",
+			label: t("操作"),
+			width: 110,
+			fixed: "right",
+			buttons: [
+				{
+					label: t("查看详情"),
+					type: "primary",
+					onClick({ scope }: any) {
+						router.push(`/conversation/detail/${scope.row.id}`);
+					},
+				},
+			],
 		},
 	],
 });

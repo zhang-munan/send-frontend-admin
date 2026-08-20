@@ -2,7 +2,8 @@ import { BaseService } from '/@/cool';
 
 class ControlWorkspaceService extends BaseService {
 	constructor() {
-		super('control/workspace');
+		// 使用完整管理端命名空间，不依赖运行时 EPS 自动接口描述。
+		super('admin/control/workspace');
 	}
 
 	summary() {
@@ -11,6 +12,18 @@ class ControlWorkspaceService extends BaseService {
 
 	auditList(params: any) {
 		return this.request({ url: '/auditList', params });
+	}
+
+	pricingConfig() {
+		return this.request({ url: '/pricingConfig' });
+	}
+
+	previewPricing(data: any) {
+		return this.request({ url: '/previewPricing', method: 'POST', data });
+	}
+
+	savePricingConfig(data: any) {
+		return this.request({ url: '/savePricingConfig', method: 'POST', data });
 	}
 
 	searchUsers(params: any) {
