@@ -894,9 +894,12 @@ onMounted(loadDashboard);
 
 <style scoped lang="scss">
 .control-page {
+	height: 100%;
 	padding: 28px 32px 48px;
+	box-sizing: border-box;
+	overflow-x: hidden;
+	overflow-y: auto;
 	background: #f6f8fb;
-	min-height: 100%;
 	color: #172033;
 }
 .hero {

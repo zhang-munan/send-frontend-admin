@@ -885,6 +885,11 @@ declare namespace Eps {
 		senderNickName?: string;
 
 		/**
+		 * undefined
+		 */
+		sendDevice?: string;
+
+		/**
 		 * 任意键值
 		 */
 		[key: string]: any;
@@ -1273,6 +1278,297 @@ declare namespace Eps {
 		[key: string]: any;
 	}
 
+	interface PromotionAmbassadorEntity {
+		/**
+		 * ID
+		 */
+		id?: number;
+
+		/**
+		 * 用户ID
+		 */
+		userId?: BigInt;
+
+		/**
+		 * 推广码
+		 */
+		promotionCode?: string;
+
+		/**
+		 * 状态：0停用 1正常
+		 */
+		status?: number;
+
+		/**
+		 * 可提现余额（分，可因退款冲正为负）
+		 */
+		availableBalance?: BigInt;
+
+		/**
+		 * 提现冻结金额（分）
+		 */
+		frozenBalance?: BigInt;
+
+		/**
+		 * 累计有效佣金（分）
+		 */
+		totalCommission?: BigInt;
+
+		/**
+		 * 累计已提现（分）
+		 */
+		totalWithdrawn?: BigInt;
+
+		/**
+		 * 累计绑定用户数
+		 */
+		totalReferrals?: number;
+
+		/**
+		 * 同意推广规则时间
+		 */
+		agreedAt?: Date;
+
+		/**
+		 * 同意的规则版本
+		 */
+		agreedRulesVersion?: string;
+
+		/**
+		 * 创建时间
+		 */
+		createTime?: string;
+
+		/**
+		 * 更新时间
+		 */
+		updateTime?: string;
+
+		/**
+		 * 昵称
+		 */
+		userNickName?: string;
+
+		/**
+		 * 手机号
+		 */
+		userPhone?: string;
+
+		/**
+		 * 任意键值
+		 */
+		[key: string]: any;
+	}
+
+	interface PromotionCommissionEntity {
+		/**
+		 * ID
+		 */
+		id?: number;
+
+		/**
+		 * 推广大使账户ID
+		 */
+		ambassadorId?: BigInt;
+
+		/**
+		 * 被推广用户ID
+		 */
+		referredUserId?: BigInt;
+
+		/**
+		 * 来源订单ID
+		 */
+		orderId?: BigInt;
+
+		/**
+		 * 来源订单号
+		 */
+		orderNo?: string;
+
+		/**
+		 * 符合条件的实付金额（分）
+		 */
+		sourceAmount?: BigInt;
+
+		/**
+		 * 佣金比例快照（基点）
+		 */
+		commissionRateBps?: number;
+
+		/**
+		 * 佣金金额（分）
+		 */
+		commissionAmount?: BigInt;
+
+		/**
+		 * 状态：0待结算 1已结算 2已冲正
+		 */
+		status?: number;
+
+		/**
+		 * 预计可提现时间
+		 */
+		availableAt?: Date;
+
+		/**
+		 * 实际结算时间
+		 */
+		settledAt?: Date;
+
+		/**
+		 * 退款冲正时间
+		 */
+		reversedAt?: Date;
+
+		/**
+		 * 冲正原因
+		 */
+		reverseReason?: string;
+
+		/**
+		 * 创建时间
+		 */
+		createTime?: string;
+
+		/**
+		 * 更新时间
+		 */
+		updateTime?: string;
+
+		/**
+		 * 推广码
+		 */
+		promotionCode?: string;
+
+		/**
+		 * 昵称
+		 */
+		referredUserName?: string;
+
+		/**
+		 * 手机号
+		 */
+		referredUserPhone?: string;
+
+		/**
+		 * 任意键值
+		 */
+		[key: string]: any;
+	}
+
+	interface PromotionWithdrawalEntity {
+		/**
+		 * ID
+		 */
+		id?: number;
+
+		/**
+		 * 推广大使账户ID
+		 */
+		ambassadorId?: BigInt;
+
+		/**
+		 * 申请用户ID
+		 */
+		userId?: BigInt;
+
+		/**
+		 * 提现单号
+		 */
+		withdrawalNo?: string;
+
+		/**
+		 * 申请金额（分）
+		 */
+		amount?: BigInt;
+
+		/**
+		 * 手续费（分）
+		 */
+		feeAmount?: BigInt;
+
+		/**
+		 * 实际到账金额（分）
+		 */
+		actualAmount?: BigInt;
+
+		/**
+		 * 提现方式：1微信 2支付宝 3银行卡
+		 */
+		withdrawMethod?: number;
+
+		/**
+		 * 收款人姓名
+		 */
+		accountName?: string;
+
+		/**
+		 * 收款账号（展示时应脱敏）
+		 */
+		accountNo?: string;
+
+		/**
+		 * 开户行
+		 */
+		bankName?: string;
+
+		/**
+		 * 状态：0待审核 1打款中 2已打款 3已驳回 4已取消
+		 */
+		status?: number;
+
+		/**
+		 * 审核时间
+		 */
+		auditTime?: Date;
+
+		/**
+		 * 审核管理员ID
+		 */
+		auditUserId?: BigInt;
+
+		/**
+		 * 打款完成时间
+		 */
+		paidAt?: Date;
+
+		/**
+		 * 打款流水号
+		 */
+		paymentTradeNo?: string;
+
+		/**
+		 * 审核/处理备注
+		 */
+		auditRemark?: string;
+
+		/**
+		 * 创建时间
+		 */
+		createTime?: string;
+
+		/**
+		 * 更新时间
+		 */
+		updateTime?: string;
+
+		/**
+		 * 昵称
+		 */
+		userNickName?: string;
+
+		/**
+		 * 手机号
+		 */
+		userPhone?: string;
+
+		/**
+		 * 任意键值
+		 */
+		[key: string]: any;
+	}
+
 	interface RecycleDataEntity {
 		/**
 		 * ID
@@ -1337,7 +1633,7 @@ declare namespace Eps {
 		id?: number;
 
 		/**
-		 * 文档标识：user_agreement | privacy_policy | refund_rules | usage_guide
+		 * 文档标识：user_agreement | privacy_policy | refund_rules | usage_guide | ambassador_rules
 		 */
 		docKey?: string;
 
@@ -2180,6 +2476,21 @@ declare namespace Eps {
 	interface UserInfoPageResponse {
 		pagination: PagePagination;
 		list: UserInfoEntity[];
+	}
+
+	interface PromotionAmbassadorPageResponse {
+		pagination: PagePagination;
+		list: PromotionAmbassadorEntity[];
+	}
+
+	interface PromotionCommissionPageResponse {
+		pagination: PagePagination;
+		list: PromotionCommissionEntity[];
+	}
+
+	interface PromotionWithdrawalPageResponse {
+		pagination: PagePagination;
+		list: PromotionWithdrawalEntity[];
 	}
 
 	interface BaseCoding {
@@ -4118,6 +4429,127 @@ declare namespace Eps {
 		request: Request;
 	}
 
+	interface PromotionAmbassador {
+		/**
+		 * 启用或停用推广大使
+		 */
+		setStatus(data?: any): Promise<any>;
+
+		/**
+		 * 单个信息
+		 */
+		info(data?: any): Promise<PromotionAmbassadorEntity>;
+
+		/**
+		 * 列表查询
+		 */
+		list(data?: any): Promise<PromotionAmbassadorEntity[]>;
+
+		/**
+		 * 分页查询
+		 */
+		page(data?: any): Promise<PromotionAmbassadorPageResponse>;
+
+		/**
+		 * 权限标识
+		 */
+		permission: { setStatus: string; info: string; list: string; page: string };
+
+		/**
+		 * 权限状态
+		 */
+		_permission: { setStatus: boolean; info: boolean; list: boolean; page: boolean };
+
+		request: Request;
+	}
+
+	interface PromotionCommission {
+		/**
+		 * 单个信息
+		 */
+		info(data?: any): Promise<PromotionCommissionEntity>;
+
+		/**
+		 * 列表查询
+		 */
+		list(data?: any): Promise<PromotionCommissionEntity[]>;
+
+		/**
+		 * 分页查询
+		 */
+		page(data?: any): Promise<PromotionCommissionPageResponse>;
+
+		/**
+		 * 权限标识
+		 */
+		permission: { info: string; list: string; page: string };
+
+		/**
+		 * 权限状态
+		 */
+		_permission: { info: boolean; list: boolean; page: boolean };
+
+		request: Request;
+	}
+
+	interface PromotionConfig {
+		/**
+		 * 保存推广配置与规则
+		 */
+		save(data?: any): Promise<any>;
+
+		/**
+		 * 获取推广配置与规则
+		 */
+		get(data?: any): Promise<any>;
+
+		/**
+		 * 权限标识
+		 */
+		permission: { save: string; get: string };
+
+		/**
+		 * 权限状态
+		 */
+		_permission: { save: boolean; get: boolean };
+
+		request: Request;
+	}
+
+	interface PromotionWithdrawal {
+		/**
+		 * 审核或确认提现
+		 */
+		audit(data?: any): Promise<any>;
+
+		/**
+		 * 单个信息
+		 */
+		info(data?: any): Promise<PromotionWithdrawalEntity>;
+
+		/**
+		 * 列表查询
+		 */
+		list(data?: any): Promise<PromotionWithdrawalEntity[]>;
+
+		/**
+		 * 分页查询
+		 */
+		page(data?: any): Promise<PromotionWithdrawalPageResponse>;
+
+		/**
+		 * 权限标识
+		 */
+		permission: { audit: string; info: string; list: string; page: string };
+
+		/**
+		 * 权限状态
+		 */
+		_permission: { audit: boolean; info: boolean; list: boolean; page: boolean };
+
+		request: Request;
+	}
+
 	interface RequestOptions {
 		url: string;
 		method?: "OPTIONS" | "GET" | "HEAD" | "POST" | "PUT" | "DELETE" | "TRACE" | "CONNECT";
@@ -4167,5 +4599,11 @@ declare namespace Eps {
 		task: { info: TaskInfo };
 		template: { category: TemplateCategory; info: TemplateInfo };
 		user: { address: UserAddress; info: UserInfo };
+		promotion: {
+			ambassador: PromotionAmbassador;
+			commission: PromotionCommission;
+			config: PromotionConfig;
+			withdrawal: PromotionWithdrawal;
+		};
 	};
 }

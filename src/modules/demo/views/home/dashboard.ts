@@ -5,6 +5,11 @@ export interface HourlyMessageStat {
 	count: number;
 }
 
+export interface DeviceMessageStat {
+	device: string;
+	count: number;
+}
+
 export interface MonthlyOrderStat {
 	month: number;
 	orderCount: number;
@@ -27,6 +32,7 @@ export interface DashboardSummary {
 	messages: {
 		total: number;
 		today: number;
+		devices: DeviceMessageStat[];
 		hourly: HourlyMessageStat[];
 	};
 	orders: {
@@ -65,6 +71,7 @@ export function createEmptyDashboard(): DashboardSummary {
 		messages: {
 			total: 0,
 			today: 0,
+			devices: [],
 			hourly: Array.from({ length: 24 }, (_, hour) => ({ hour, count: 0 }))
 		},
 		orders: { paidCount: 0, todayPaidCount: 0 },

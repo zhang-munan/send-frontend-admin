@@ -1,30 +1,50 @@
 <template>
 	<div v-loading="loading" class="count-views">
-		<div class="card">
-			<div class="card__header">
-				<span class="label">{{ $t('累计短信量') }}</span>
-				<cl-svg name="trend" class="icon" />
-			</div>
+		<el-popover placement="top" :width="300" trigger="hover">
+			<template #reference>
+				<div class="card">
+					<div class="card__header">
+						<span class="label">{{ $t('累计短信量') }}</span>
+						<cl-svg name="trend" class="icon" />
+					</div>
 
-			<div class="card__container">
-				<cl-number :value="data.total" class="num" suffix="条" />
-				<v-chart :option="chartOption" autoresize />
-			</div>
+					<div class="card__container">
+						<cl-number :value="data.total" class="num" suffix="条" />
+						<v-chart :option="chartOption" autoresize />
+					</div>
 
-			<div class="card__footer">
-				<span>{{ $t('今日短信量') }} {{ data.today }}</span>
-				<span>{{ $t('送达率') }} {{ delivery.rate }}%</span>
+					<div class="card__footer">
+						<span>{{ $t('今日短信量') }} {{ data.today }}</span>
+						<span>{{ $t('送达率') }} {{ delivery.rate }}%</span>
+					</div>
+				</div>
+			</template>
+
+			<div class="device-stats">
+				<div class="device-stats__title">发送设备明细</div>
+				<template v-if="data.devices.length">
+					<div v-for="item in data.devices" :key="item.device" class="device-stats__item">
+						<span class="device-stats__name">{{ item.device }} 设备</span>
+						<span class="device-stats__count">发送 {{ item.count }} 条</span>
+					</div>
+				</template>
+				<div v-else class="device-stats__empty">暂无设备发送记录</div>
 			</div>
-		</div>
+		</el-popover>
 	</div>
 </template>
 
 <script lang="ts" setup>
 import { computed } from 'vue';
-import type { HourlyMessageStat } from '../dashboard';
+import type { DeviceMessageStat, HourlyMessageStat } from '../dashboard';
 
 const props = defineProps<{
-	data: { total: number; today: number; hourly: HourlyMessageStat[] };
+	data: {
+		total: number;
+		today: number;
+		devices: DeviceMessageStat[];
+		hourly: HourlyMessageStat[];
+	};
 	delivery: { delivered: number; failed: number; rate: number };
 	loading: boolean;
 }>();
@@ -107,6 +127,44 @@ const chartOption = computed(() => ({
 			border-top: 0;
 			justify-content: space-between;
 		}
+	}
+}
+</style>
+
+<style lang="scss">
+.device-stats {
+	max-height: 320px;
+	overflow-y: auto;
+	font-size: 13px;
+
+	&__title {
+		margin-bottom: 8px;
+		font-weight: 600;
+		color: var(--el-text-color-primary);
+	}
+
+	&__item {
+		display: flex;
+		justify-content: space-between;
+		gap: 16px;
+		padding: 4px 0;
+		color: var(--el-text-color-regular);
+	}
+
+	&__name {
+		min-width: 0;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	&__count {
+		flex-shrink: 0;
+		white-space: nowrap;
+	}
+
+	&__empty {
+		color: var(--el-text-color-secondary);
 	}
 }
 </style>

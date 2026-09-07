@@ -86,6 +86,13 @@ const Table = useTable({
 			showOverflowTooltip: true
 		},
 		{
+			prop: 'sendDevice',
+			label: '发送设备',
+			minWidth: 150,
+			showOverflowTooltip: true,
+			formatter: (row: any) => row.sendDevice || '-'
+		},
+		{
 			prop: 'sendType',
 			label: '发送类型',
 			width: 100,
